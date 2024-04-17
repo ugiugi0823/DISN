@@ -36,7 +36,7 @@ ldm_stable = DiffusionPipeline.from_pretrained(
         torch_dtype=torch.float32,
     ).to(device)
 
-pjf_path = "./lora/dune-photoofacrackdefectimage-BF"
+pjf_path = "./lora"
 ldm_stable.load_lora_weights(pjf_path, 
                              weight_name="pytorch_lora_weights.safetensors")
 
