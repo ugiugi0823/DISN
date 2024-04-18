@@ -39,13 +39,10 @@ def load_512(image_path, left=0, right=0, top=0, bottom=0):
         offset = (h - w) // 2
         image = image[offset:offset + w]
         
-    # 🥹🥹🥹🥹🥹🥹🥹🥹🥹🥹🥹🥹🥹🥹🥹🥹🥹🥹🥹🥹🥹🥹🥹🥹🥹🥹🥹🥹🥹🥹🥹🥹🥹🥹🥹
-    # image = load_image(image_path).resize((64, 64))
+
     image = load_image(image_path).resize((1024, 1024))
     image = np.array(image)
-    # 🥹🥹🥹🥹🥹🥹🥹🥹🥹🥹🥹🥹🥹🥹🥹🥹🥹🥹🥹🥹🥹🥹🥹🥹🥹🥹🥹🥹🥹🥹🥹🥹🥹🥹🥹
-    
-    # image = np.array(Image.fromarray(image).resize((512, 512)))
+
     if np.isnan(image).any():
         print("load_512 NaN 값이 있습니다!")
 
@@ -59,32 +56,18 @@ class NullInversion:
         
         
         
-        # prev_timestep = timestep - self.scheduler.config.num_train_timesteps // self.scheduler.num_inference_steps
-        # alpha_prod_t = self.scheduler.alphas_cumprod[timestep]
-        # alpha_prod_t_prev = self.scheduler.alphas_cumprod[prev_timestep] if prev_timestep >= 0 else self.scheduler.final_alpha_cumprod
-        # beta_prod_t = 1 - alpha_prod_t
-        
-        
-        # pred_original_sample = (sample - beta_prod_t ** 0.5 * model_output) / alpha_prod_t ** 0.5
-        # pred_sample_direction = (1 - alpha_prod_t_prev) ** 0.5 * model_output
-        # prev_sample = alpha_prod_t_prev ** 0.5 * pred_original_sample + pred_sample_direction
         return prev_sample
     
     
 
     def next_step(self, model_output: Union[torch.FloatTensor, np.ndarray], timestep: int, sample: Union[torch.FloatTensor, np.ndarray]):
-        # next_sample = self.scheduler.step(model_output, timestep, sample, return_dict=False)[0]
         print("0. timestep_ori",timestep)
-        # timestep, next_timestep = min(timestep - self.scheduler.config.num_train_timesteps // self.scheduler.num_inference_steps, 999), timestep
         time_term = self.scheduler.config.num_train_timesteps // self.scheduler.num_inference_steps 
         timestep, next_timestep = min(timestep, 999), min(timestep + time_term, 999)
         
         
         
         
-        
-        print("1. timestep",timestep)
-        print("2. next_timestep",next_timestep)
         alpha_prod_t = self.scheduler.alphas_cumprod[timestep] if timestep >= 0 else self.scheduler.final_alpha_cumprod
         alpha_prod_t_next = self.scheduler.alphas_cumprod[next_timestep]
         beta_prod_t = 1 - alpha_prod_t        
@@ -98,42 +81,15 @@ class NullInversion:
         
         next_original_sample = (sample - beta_prod_t ** 0.5 * model_output) / alpha_prod_t ** 0.5
         
-        # 6. compute "direction pointing to x_t" of formula (12) from https://arxiv.org/pdf/2010.02502.pdf
-        # next_sample_direction = (1 - alpha_prod_t_next - std_dev_t**2) ** (0.5) * model_output
         next_sample_direction = (1 - alpha_prod_t_next) ** (0.5) * model_output
-        
-        # pred_sample_direction = (1 - alpha_prod_t_next - std_dev_t**2) ** (0.5) * next_original_sample
-        # 7. compute x_t without "random noise" of formula (12) from https://arxiv.org/pdf/2010.02502.pdf
-        
+
         next_sample = alpha_prod_t_next ** (0.5) * next_original_sample + next_sample_direction
         
-        # generator = torch.Generator("cuda").manual_seed(33)
-        # variance_noise = randn_tensor(
-        #             model_output.shape, generator=generator, device=model_output.device, dtype=model_output.dtype
-        #             )
 
-        # # 🔥 no variance noise
-        # variance = std_dev_t * variance_noise
-        # next_sample = next_sample + variance 
-        
-        
-        
-       # # timestep, next_timestep = min(timestep - self.scheduler.config.num_train_timesteps // self.scheduler.num_inference_steps, 999), timestep
-        # alpha_prod_t = self.scheduler.alphas_cumprod[timestep] if timestep >= 0 else self.scheduler.final_alpha_cumprod
-        # alpha_prod_t_next = self.scheduler.alphas_cumprod[next_timestep]
-        # beta_prod_t = 1 - alpha_prod_t
-        # next_original_sample = (sample - beta_prod_t ** 0.5 * model_output) / alpha_prod_t ** 0.5
-        # next_sample_direction = (1 - alpha_prod_t_next) ** 0.5 * model_output
-        # next_sample = alpha_prod_t_next ** 0.5 * next_original_sample + next_sample_direction
-        
-        # next_sample = self.scheduler.step(model_output, timestep, sample, return_dict=False)[0]
-        
-        
         return next_sample
 
     def get_noise_pred_single(self, latents, t, context, context_p, add_time_ids):
-# 💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨
-        
+    
             
         
         latents = self.scheduler.scale_model_input(latents, t)
@@ -148,7 +104,6 @@ class NullInversion:
 
     
     
-# 💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨💨 
 
     def get_noise_pred(self, latents, t, is_forward=True, context=None, context_p=None, add_time_ids=None):
         latents_input = torch.cat([latents] * 2)
@@ -187,7 +142,6 @@ class NullInversion:
         return latents
     
     
-# 여기는 손을 봤음 
     @torch.no_grad()
     def latent2image(self, latents, return_type='np'):
         latents = 1 / 0.13025 * latents.detach()
@@ -220,17 +174,14 @@ class NullInversion:
                 # 여기 호출
                 image = torch.from_numpy(image).float() / 127.5 - 1   
                  
-                # image = torch.from_numpy(image) / 127.5 - 1    
+
                 image = image.permute(2, 0, 1).unsqueeze(0).to("cuda")
-                print(image.size())
-                # torch.Size([1, 3, 1024, 1024])
                 
                 
                 generator = torch.Generator("cuda").manual_seed(33)
 
                 latents = self.model.vae.encode(image.to(self.model.unet.dtype)).latent_dist.sample(generator)
-                # latents = self.model.vae.encode(image.to(self.model.unet.dtype))['latent_dist'].mean
-                
+
                 if torch.isnan(latents).any():
                     print("44"*30)
                 
@@ -240,8 +191,6 @@ class NullInversion:
                     print("55"*30)
                 print(latents.size())
                 
-                
-        
             
         return latents
 
@@ -267,7 +216,6 @@ class NullInversion:
         
         
         
-    ###################################🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡
         self.model.vae_scale_factor = 2 ** (len(self.model.vae.config.block_out_channels) - 1)
         self.model.default_sample_size = self.model.unet.config.sample_size
         
@@ -301,14 +249,11 @@ class NullInversion:
         add_time_ids = add_time_ids.repeat(batch_size * num_images_per_prompt, 1)
 
         
-###################################🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡 
-        
         self.context = torch.cat([negative_prompt_embeds, prompt_embeds])
         self.context_p = torch.cat([negative_pooled_prompt_embeds, pooled_prompt_embeds])
         self.add_time_ids = torch.cat([add_time_ids, add_time_ids])        
         self.prompt = prompt
 
-# 👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑
     @torch.no_grad()
     def ddim_loop(self, latent):
 
@@ -328,8 +273,6 @@ class NullInversion:
             t = self.model.scheduler.timesteps[len(self.model.scheduler.timesteps) - i - 1]
             
             
-            # 요기서 오류!
-            
 
             noise_pred = self.get_noise_pred_single(latent, t, cond_embeddings, cond_embeddings_p, add_time_ids2)
             latent = self.next_step(noise_pred, t, latent)
@@ -337,7 +280,6 @@ class NullInversion:
             
             
         return all_latent
-# 👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑👑
 
     @property
     def scheduler(self):
@@ -347,16 +289,15 @@ class NullInversion:
     def ddim_inversion(self, image):
         latent = self.image2latent(image)
         if torch.isnan(latent).any():
-            print("image2latent Nan!")  # 결과: True
+            print("image2latent Nan!") 
        
         image_rec = self.latent2image(latent)
-        # print(image_rec)
         
         
         
         ddim_latents = self.ddim_loop(latent)
         if torch.isnan(ddim_latents[0]).any():
-            print("ddim_loop Nan")  # 결과: True
+            print("ddim_loop Nan")  
         
         
         return image_rec, ddim_latents
@@ -393,30 +334,17 @@ class NullInversion:
             t = self.model.scheduler.timesteps[i]
             
             with torch.no_grad():
-                # cond_embeddings = cond_embeddings.to(torch.float32)
-                # latent_cur = latent_cur.to(torch.float32)
+
                 noise_pred_cond = self.get_noise_pred_single(latent_cur, t, cond_embeddings, cond_embeddings_p, add_time_ids2)
 
             for j in range(num_inner_steps):
                 noise_pred_uncond = self.get_noise_pred_single(latent_cur, t, uncond_embeddings, uncond_embeddings_p, add_time_ids1)
                 noise_pred = noise_pred_uncond + GUIDANCE_SCALE * (noise_pred_cond - noise_pred_uncond)
                 
-                # print(latents_prev_rec) 
-                # print(latent_prev)
-                
-                
-                # with torch.autocast(device_type='cuda', dtype=torch.float16):
                 latents_prev_rec = self.prev_step(noise_pred, t, latent_cur)
                 loss = nnf.mse_loss(latents_prev_rec, latent_prev)
                 loss_item = loss.item()
-                print(loss_item)
-                
-                
-                # scaler.scale(loss).backward()
-                # scaler.step(optimizer)
-                # scaler.update()
-                # optimizer.zero_grad() # set_to_none=True here can modestly improve performance
-                
+  
                 optimizer.zero_grad()
                 loss.backward()
                 if torch.isnan(uncond_embeddings.grad).any():
@@ -425,7 +353,6 @@ class NullInversion:
                     break
                 optimizer.step()
                 loss_item = loss.item()
-                print(loss_item)
                 
                 
                 bar.update()
@@ -458,8 +385,6 @@ class NullInversion:
         if verbose:
             print("Null-text optimization...")
         uncond_embeddings, uncond_embeddings_p = self.null_optimization(ddim_latents, num_inner_steps, early_stop_epsilon)
-        # uncond_embeddings = None
-        # uncond_embeddings_p = None
         
         
         return (image_gt, image_rec), ddim_latents[-1], uncond_embeddings, uncond_embeddings_p

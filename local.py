@@ -38,14 +38,12 @@ from null import *
 from local import *
 
 
-# CUDA_VISIBLE_DEVICES=5 python run.py
+# python run.py
 
 device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 
 
 scheduler = DDIMScheduler(beta_start=0.00085, beta_end=0.012, beta_schedule="scaled_linear", clip_sample=False, set_alpha_to_one=False)
-# vae = AutoencoderKL.from_pretrained("madebyollin/sdxl-vae-fp16-fix", torch_dtype=torch.float16).to("cuda")
-
 
 model = "stabilityai/stable-diffusion-xl-base-1.0"
 
@@ -65,16 +63,6 @@ ldm_stable.enable_model_cpu_offload()
 
 tokenizer = ldm_stable.tokenizer
 
-
-
-
-
-
-
-
-
-
-
 LOW_RESOURCE = False
 NUM_DDIM_STEPS = 50
 GUIDANCE_SCALE = 5.0
@@ -85,7 +73,6 @@ class LocalBlend:
 
     def get_mask(self, x_t, maps, alpha, use_pool):
         k = 1
-        # x_t : torch.Size([2, 4, 64, 64]) maps: torch.Size([2, 1280, 1, 16, 16, 77]) alpha: torch.Size([2, 1, 1, 1, 1, 77])
         maps = (maps * alpha).sum(-1).mean(1)
         if use_pool:
             maps = nnf.max_pool2d(maps, (k * 2 + 1, k * 2 +1), (1, 1), padding=(k, k))
@@ -101,28 +88,12 @@ class LocalBlend:
         
         
         if self.counter > self.start_blend:
-            print("🦖"*2)
-            # maps = attention_store["down_cross"][0:2] + attention_store["up_cross"][:3]
-            # 🦖1
-            # maps = attention_store["down_cross"][2:4] + attention_store["up_cross"][:3]
-            # 🦖2
+
             maps = attention_store["down_cross"][12:24] + attention_store["up_cross"][:18]
-            # 🦖3 
-            # maps = attention_store["down_cross"][:1] + attention_store["up_cross"][:1]
-            # 🦖4
-            # maps = attention_store["down_cross"][:7] + attention_store["up_cross"][:7]
-            # 🦖5            
-            # maps = attention_store["down_cross"][:24] + attention_store["up_cross"][:36]
-            
-            # maps = attention_store["down_cross"][22:24] + attention_store["up_cross"][:3]
-            # maps = attention_store["down_cross"][:24] + attention_store["up_cross"][:36]
-            # maps = attention_store["down_cross"][0:2] + attention_store["up_cross"][:3]
-            
-            
+
             maps_list = [item.reshape(self.alpha_layers.shape[0], -1, 1, 16, 16, MAX_NUM_WORDS) for item in maps]
             maps = torch.cat(maps_list, dim=1)
-            # maps = maps[:1]
-            # 여기 건드림 03.30일   
+
             mask = self.get_mask(x_t,maps, self.alpha_layers, True)
             if self.substruct_layers is not None:
                 maps_sub = ~self.get_mask(maps, self.substruct_layers, False)
@@ -177,8 +148,7 @@ class EmptyControl:
 class AttentionControl(abc.ABC):
 
     def step_callback(self, x_t):
-        # 🫥🫥🫥🫥🫥🫥🫥🫥🫥🫥🫥🫥🫥🫥🫥🫥🫥🫥🫥🫥🫥🫥🫥🫥🫥🫥🫥🫥🫥🫥🫥🫥🫥🫥🫥🫥🫥🫥🫥🫥
-        
+
         return x_t
 
     def between_steps(self):
@@ -197,7 +167,6 @@ class AttentionControl(abc.ABC):
             if LOW_RESOURCE:
                 attn = self.forward(attn, is_cross, place_in_unet)
             else:
-                # attn = attn.reshape(20, 1024, 64)
                 h = attn.shape[0]
                 attn[h // 2:] = self.forward(attn[h // 2:], is_cross, place_in_unet)
         self.cur_att_layer += 1
@@ -242,7 +211,7 @@ class AttentionStore(AttentionControl):
         key = f"{place_in_unet}_{'cross' if is_cross else 'self'}"
         
         
-        if attn.shape[1] <= 32 ** 2:  # avoid memory overhead
+        if attn.shape[1] <= 32 ** 2: 
             
             self.step_store[key].append(attn)
         return attn
@@ -257,20 +226,13 @@ class AttentionStore(AttentionControl):
         self.step_store = self.get_empty_store()
 
     def get_average_attention(self):
-        print("🪔"*50)
 
         key_info = self.attention_store.keys()
         print(key_info)
-        print("🪔"*80)
+
         average_attention = {key: [item / self.cur_step for item in self.attention_store[key]] for key in self.attention_store}
         
-        # average_attention = {
-        #     key: [item / self.cur_step for item in self.attention_store[key]]
-        #     for key in self.attention_store if self.attention_store[key]
-        # }
 
-        
-        # average_attention = {key: [item / self.cur_step for item in self.attention_store[key]] for key in self.attention_store}
         return average_attention
 
 
@@ -288,7 +250,7 @@ class AttentionStore(AttentionControl):
 class AttentionControlEdit(AttentionStore, abc.ABC):
 
     def step_callback(self, x_t):
-        # print("class AttentionControlEdit(AttentionStore, abc.ABC):")
+
         if self.local_blend is not None:
             x_t = self.local_blend(x_t, self.attention_store)
         return x_t
@@ -310,16 +272,15 @@ class AttentionControlEdit(AttentionStore, abc.ABC):
         
         super(AttentionControlEdit, self).forward(attn, is_cross, place_in_unet)
         
-        # self = <class 'local.AttentionReweight'>
+
         if is_cross or (self.num_self_replace[0] <= self.cur_step < self.num_self_replace[1]):
             
-            # self.num_self_replace = (0, 35)
+
             h = attn.shape[0] // (self.batch_size)
             attn = attn.reshape(self.batch_size, h, *attn.shape[1:])
             attn_base, attn_repalce = attn[0], attn[1:]
             if is_cross:
-                # print(self.cross_replace_alpha.size())
-                # print(self.cur_step)
+
                 alpha_words = self.cross_replace_alpha[self.cur_step]
                 attn_repalce_new = self.replace_cross_attention(attn_base, attn_repalce) * alpha_words + (1 - alpha_words) * attn_repalce
                 attn[1:] = attn_repalce_new
@@ -374,7 +335,6 @@ class AttentionReweight(AttentionControlEdit):
         if self.prev_controller is not None:
             attn_base = self.prev_controller.replace_cross_attention(attn_base, att_replace)
         attn_replace = attn_base[None, :, :, :] * self.equalizer[:, None, None, :]
-        # attn_replace = attn_replace / attn_replace.sum(-1, keepdims=True)
         return attn_replace
 
     def __init__(self, prompts, num_steps: int, cross_replace_steps: float, self_replace_steps: float, equalizer,
@@ -407,22 +367,11 @@ def aggregate_attention(prompts,attention_store: AttentionStore, res: int, from_
             
             for item in attention_maps[f"{location}_{'cross' if is_cross else 'self'}"]:
                 
-                # print("🎧")
-                # print(item.shape)
-                # torch.Size([1, 20, 256, 64])
-                # torch.Size([1, 20, 1024, 64])
-                # print(item.shape[2])
-                
-                #torch.Size([20, 256, 77])
-                # torch.Size([20, 16, 16, 77])
-                # item = item.squeeze(0)
-                
                 if item.shape[1] == num_pixels:
                     
-                    # item.squeeze(0)
-                    # print(item.size())
+
                     cross_maps = item.reshape(len(prompts), -1, res, res, item.shape[-1])[select]
-                    # print(cross_maps.size())
+
                     out.append(cross_maps)
     out = torch.cat(out, dim=0)
     out = out.sum(0) / out.shape[0]
@@ -431,20 +380,19 @@ def aggregate_attention(prompts,attention_store: AttentionStore, res: int, from_
 
 def make_controller(model,prompts: List[str], is_replace_controller: bool, cross_replace_steps: Dict[str, float], self_replace_steps: float, blend_words=None, equilizer_params=None, blend_word=None) -> AttentionControlEdit:
     if blend_words is None:
-        print("1️⃣"*40)
+
         lb = None
     else:
-        print("2️⃣"*40)
-        print(prompts)
-        print(blend_word)
+
+
         lb = LocalBlend(model,prompts, blend_word)
     if is_replace_controller:
-        print("3️⃣"*40)
+
         controller = AttentionReplace(prompts, NUM_DDIM_STEPS, cross_replace_steps=cross_replace_steps, self_replace_steps=self_replace_steps, local_blend=lb)
     else:
         controller = AttentionRefine(prompts, NUM_DDIM_STEPS, cross_replace_steps=cross_replace_steps, self_replace_steps=self_replace_steps, local_blend=lb)
     if equilizer_params is not None:
-        print("34⃣"*40)
+
         eq = get_equalizer(prompts[1], equilizer_params["words"], equilizer_params["values"])
         controller = AttentionReweight(prompts, NUM_DDIM_STEPS, cross_replace_steps=cross_replace_steps,
                                        self_replace_steps=self_replace_steps, equalizer=eq, local_blend=lb, controller=controller)
@@ -478,21 +426,17 @@ def show_cross_attention(model, prompts, attention_store: AttentionStore, res: i
         image = image.unsqueeze(-1).expand(*image.shape, 3)
         image = image.numpy().astype(np.uint8)
         
-        # Pillow 이미지로 변환
+
         pil_image = Image.fromarray(image)
-        # 명암 대비를 증가시키기
+
         enhancer = ImageEnhance.Contrast(pil_image)
-        enhanced_image = enhancer.enhance(4.0)  # 대비 인자 조정
+        enhanced_image = enhancer.enhance(4.0) 
         
-        # 256x256 크기로 조정
+
         resized_image = enhanced_image.resize((256, 256))
         image_with_text = ptp_utils.text_under_image(np.array(resized_image), decoder(int(tokens[i])))
         images.append(image_with_text)
         
-        
-        # image = np.array(Image.fromarray(image).resize((256, 256)))
-        # image = ptp_utils.text_under_image(image, decoder(int(tokens[i])))
-        # images.append(image)
     ptp_utils.view_images(np.stack(images, axis=0))
     
 
@@ -547,8 +491,7 @@ def text2image_ldm_stable(
     negative_prompt_embeds, negative_pooled_prompt_embeds = compel(neg_prompt) 
     
     
-    
-###################################🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡
+
     model.vae_scale_factor = 2 ** (len(model.vae.config.block_out_channels) - 1)
     model.default_sample_size = model.unet.config.sample_size
     
@@ -581,10 +524,6 @@ def text2image_ldm_stable(
 
     
     add_time_ids = torch.cat([add_time_ids, add_time_ids], dim=0) 
-    # context_p = torch.cat([pooled_prompt_embeds, negative_pooled_prompt_embeds], dim=0)
-    
-###################################🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡 
-    
 
     
     # max_length = text_inputs.input_ids.shape[-1]
@@ -606,20 +545,16 @@ def text2image_ldm_stable(
             context = torch.cat([uncond_embeddings[i].expand(*prompt_embeds.shape).to(model.device), prompt_embeds.to(model.device)]) 
             context_p = torch.cat([uncond_embeddings_p[i].expand(*pooled_prompt_embeds.shape).to(model.device), pooled_prompt_embeds.to(model.device)]) 
             
-            # add_time_idss = torch.cat([add_time_ids1[i].expand(*add_time_ids.shape).to(model.device), add_time_ids.to(model.device)]) 
-            
-            # context = torch.cat([prompt_embeds, prompt_embeds])
-            # context = torch.cat([uncond_embeddings[i].expand(*text_embeddings.shape), text_embeddings])
+        
         else:
             context = torch.cat([uncond_embeddings_, prompt_embeds]) 
-            print("👑"*40)
+
         
-        # print("🎰"*40)
+
         
         latents = ptp_utils.diffusion_step(model, controller, latents, context, context_p, add_time_ids, t, guidance_scale, low_resource=False)
 
     if return_type == 'image':
-        print("🤯"*40)
         image = ptp_utils.latent2image(model.vae, latents)
         
     else:

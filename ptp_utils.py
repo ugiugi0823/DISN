@@ -12,7 +12,7 @@ def text_under_image(image: np.ndarray, text: str, text_color: Tuple[int, int, i
     offset = int(h * .2)
     img = np.ones((h + offset, w, c), dtype=np.uint8) * 255
     font = cv2.FONT_HERSHEY_SIMPLEX
-    # font = ImageFont.truetype("/usr/share/fonts/truetype/noto/NotoMono-Regular.ttf", font_size)
+
     img[:h] = image
     textsize = cv2.getTextSize(text, font, 1, 2)[0]
     text_x, text_y = (w - textsize[0]) // 2, h + offset - textsize[1] // 2
@@ -51,23 +51,23 @@ def view_images(images, num_rows=1, offset_ratio=0.02):
     
     
 def save_individual_images(images, directory="./result"):
-    # 이미지가 리스트가 아니라면, 리스트로 만들어 줍니다.
+
     if not isinstance(images, list):
         images = [images]
         
-    # 각 이미지를 순회하며 저장합니다.
+
     for index, image in enumerate(images):
-        # 이미지 형식을 uint8로 변환합니다. (필요한 경우)
+
         image = image.astype(np.uint8)
         
-        # 이미지를 PIL 이미지로 변환합니다.
+
         pil_img = Image.fromarray(image)
         
-        # 서울 시간대 기준 현재 시간을 가져옵니다.
+
         seoul_tz = pytz.timezone("Asia/Seoul")
         current_time = datetime.datetime.now(seoul_tz).strftime("%Y-%m-%dT%H-%M-%S")
         
-        # 이미지를 개별적으로 저장합니다. 파일 이름에 인덱스를 추가하여 각 이미지를 구분합니다.
+        
         file_path = f"{directory}/result_{current_time}_{index}.png"
         pil_img.save(file_path)
         print(f"Image {index} saved as {file_path}")    
@@ -101,12 +101,11 @@ def diffusion_step(model, controller, latents, context, context_p, add_time_ids,
 
 
 def latent2image(vae, latents):
-    # latents / self.vae.config.scaling_factor
+
     latents = 1 / 0.13025 * latents
     image = vae.decode(latents)['sample']
     
-    # image = vae.decode(latents / vae.config.scaling_factor, return_dict=False)[0]
-    # image = vae.decode(latents)[0]
+
     image = (image / 2 + 0.5).clamp(0, 1)
     image = image.cpu().permute(0, 2, 3, 1).numpy()
     image = (image * 255).round().astype(np.uint8)
@@ -121,102 +120,16 @@ def init_latent(latent, model, height, width, generator, batch_size):
             generator=generator,
         )
     latents = latent.expand(batch_size,  model.unet.in_channels, height // 8, width // 8).to(model.device)
-    # latents = latent.expand(batch_size,  model.unet.in_channels, height // model.vae_scale_factor, width // model.vae_scale_factor).to(model.device)
+    
     latents = latents * model.scheduler.init_noise_sigma
     
     
     return latent, latents
 
 
-# @torch.no_grad()
-# def text2image_ldm(
-#     model,
-#     prompt:  List[str],
-#     controller,
-#     num_inference_steps: int = 50,
-#     guidance_scale: Optional[float] = 7.,
-#     generator: Optional[torch.Generator] = None,
-#     latent: Optional[torch.FloatTensor] = None,
-# ):
-#     register_attention_control(model, controller)
-#     height = width = 256
-#     batch_size = len(prompt)
-    
-#     uncond_input = model.tokenizer([""] * batch_size, padding="max_length", max_length=77, return_tensors="pt")
-#     uncond_embeddings = model.bert(uncond_input.input_ids.to(model.device))[0]
-    
-#     text_input = model.tokenizer(prompt, padding="max_length", max_length=77, return_tensors="pt")
-#     text_embeddings = model.bert(text_input.input_ids.to(model.device))[0]
-#     latent, latents = init_latent(latent, model, height, width, generator, batch_size)
-#     context = torch.cat([uncond_embeddings, text_embeddings])
-    
-#     model.scheduler.set_timesteps(num_inference_steps)
-#     for t in tqdm(model.scheduler.timesteps):
-#         latents = diffusion_step(model, controller, latents, context, t, guidance_scale)
-    
-#     image = latent2image(model.vqvae, latents)
-   
-#     return image, latent
-
-# 😶‍😶️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️🌫️
-# ️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️🌫️
-# @torch.no_grad()
-# def text2image_ldm_stable(
-#     model,
-#     prompt: List[str],
-#     controller,
-#     num_inference_steps: int = 50,
-#     guidance_scale: float = 7.5,
-#     generator: Optional[torch.Generator] = None,
-#     latent: Optional[torch.FloatTensor] = None,
-#     low_resource: bool = False,
-# ):
-#     register_attention_control(model, controller)
-#     height = width = 512
-#     batch_size = len(prompt)
-
-#     text_input = model.tokenizer(
-#         prompt,
-#         padding="max_length",
-#         max_length=model.tokenizer.model_max_length,
-#         truncation=True,
-#         return_tensors="pt",
-#     )
-#     text_embeddings = model.text_encoder(text_input.input_ids.to(model.device))[0]
-#     max_length = text_input.input_ids.shape[-1]
-#     uncond_input = model.tokenizer(
-#         [""] * batch_size, padding="max_length", max_length=max_length, return_tensors="pt"
-#     )
-#     uncond_embeddings = model.text_encoder(uncond_input.input_ids.to(model.device))[0]
-    
-#     context = [uncond_embeddings, text_embeddings]
-#     if not low_resource:
-#         context = torch.cat(context)
-#     latent, latents = init_latent(latent, model, height, width, generator, batch_size)
-    
-#     # set timesteps
-#     extra_set_kwargs = {"offset": 1}
-#     model.scheduler.set_timesteps(num_inference_steps, **extra_set_kwargs)
-#     for t in tqdm(model.scheduler.timesteps):
-#         latents = diffusion_step(model, controller, latents, context, t, guidance_scale, low_resource)
-    
-#     image = latent2image(model.vae, latents)
-  
-#     return image, latent
-
-
 def register_attention_control(model, controller):
     def ca_forward(self, place_in_unet):
-            # to_out = self.to_out
-            # # print(type(to_out))
-            # if type(to_out) is torch.nn.modules.container.ModuleList:
-            
-            #     to_out = self.to_out[0]
-            #     # print(to_out)
-            # else:
-            #     to_out = self.to_out
-            #     # print("else",to_out)
-            
+
             
             def forward(hidden_states, encoder_hidden_states=None, attention_mask=None,temb=None,scale=1.0):
         
@@ -273,7 +186,7 @@ def register_attention_control(model, controller):
 
                 attention_probs = self.get_attention_scores(query, key, attention_mask)
                 if hasattr(self, "store_attn_map"):
-                    print("💛"*50)
+
                     self.attn_map = attention_probs
                 # torch.Size([10, 1024, 1024])
                 attention_probs2 = controller(attention_probs, is_cross, place_in_unet)
@@ -294,25 +207,12 @@ def register_attention_control(model, controller):
                 
                 
                 
-                
-                # linear proj
-                # hidden_states = to_out(hidden_states)
-                # torch.Size([1, 1024, 640])
-                
-
-                # linear proj
-                # hidden_states = self.to_out[0](hidden_states, scale=scale)
-                # # dropout
-                # hidden_states = self.to_out[1](hidden_states)
-
                 if input_ndim == 4:
                     hidden_states = hidden_states.transpose(-1, -2).reshape(batch_size, channel, height, width)
 
                 if self.residual_connection:
                     hidden_states = hidden_states + residual
 
-                # hidden_states = hidden_states / self.rescale_output_factor
-                # to_out(hidden_states)
                 return hidden_states 
             return forward
 
@@ -326,7 +226,7 @@ def register_attention_control(model, controller):
             self.num_att_layers = 0
 
     if controller is None:
-        print("❤️‍🔥"*80)
+
         controller = DummyController()
 
     def register_recr(net_, count, place_in_unet):
@@ -334,7 +234,7 @@ def register_attention_control(model, controller):
         
         # if net_.__class__.__name__ == 'CrossAttention':
         if net_.__class__.__name__ == 'Attention':
-            # print("⏳"*40)
+
             net_.forward = ca_forward(net_, place_in_unet)
             return count + 1
         elif hasattr(net_, 'children'):
