@@ -71,26 +71,6 @@ ptp_utils.view_images([image_gt, image_enc, image_inv[0]])
 ptp_utils.save_individual_images([image_gt, image_enc, image_inv[0]])
 show_cross_attention(ldm_stable,prompts,controller, 32, ["up","down"])
 
-prompts = ["photo of a crack defect image", 
-           "photo of a crack defect image"]
-neg_prompts = [neg_prompt, neg_prompt] 
-
-
-prompts_make = [re.sub(r"\((.*?)\)", r"\1", prompt) for prompt in prompts]  # 괄호 안의 텍스트 유지
-prompts_make = [re.sub(r"\d+\.\d+", "", prompt).strip() for prompt in prompts_make]  # 숫자 제거
-
-
-cross_replace_steps = {'default_':0.8,}
-self_replace_steps = 0.7
-blend_word = ((('defect',), ("defect",))) # for local edit. If it is not local yet - use only the source object: blend_word = ((('cat',), ("cat",))).
-eq_params = {"words": ("defect",), "values": (4.0,)} # amplify attention to the word "red" by *2
-
-controller = make_controller(ldm_stable,prompts_make, True, cross_replace_steps, self_replace_steps, blend_word, eq_params, blend_word)
-images, _ = run_and_display(ldm_stable,neg_prompts, prompts, controller, run_baseline=False, latent=x_t, uncond_embeddings=uncond_embeddings,uncond_embeddings_p=uncond_embeddings_p, steps=50)
-
-print("Image is highly affected by the self_replace_steps, usually 0.4 is a good default value, but you may want to try the range 0.3,0.4,0.5,0.7 ")
-
-
 
 ######################################################################################################### 
 
