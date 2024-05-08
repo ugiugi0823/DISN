@@ -6,3 +6,38 @@
 In the manufacturing industry, defect classification is crucial but hampered by challenges from imbalanced data, which often leads to model overfitting when data is scarce. One common solution is to use synthetic data from generative models; however, these models typically produce results that are structurally inconsistent. Addressing these concerns, this paper introduces a novel Null Embedding Optimization technique that generates latent representations closely resembling the original images, significantly enhancing the fidelity of generated images. This method ensures that synthetic images are not only visually similar to the originals but also subjected to a more extensive and diverse augmentation process, increasing the variability within the dataset. Consequently, this approach effectively doubles the usable dataset size and notably boosts the accuracy of AI classification models by up to 8\%. For those interested, the dataset and source code are accessible at https://github.com/ugiugi0823/DISN.
 ![Figure 3](./fig/Figure3.jpg)
 
+
+
+## Configuration Settings
+
+pip install [Highly recommended]
+```
+pip install -r requirements.txt
+```
+or
+
+conda env list
+```
+conda env create -f environment.yaml
+```
+
+
+## If you want to see the demo
+```
+python run.py
+```
+
+
+
+
+## What if you actually wanted to double up your existing dataset?
+
+```
+bash run.sh
+```
+
+or
+
+```
+CUDA_VISIBLE_DEVICES=5 python run_dataset.py --original_dataset_path "./original_dataset" --new_dataset_path "./new_dataset" --prompt "photo of a crack defect image" --neg_prompt " "
+```
