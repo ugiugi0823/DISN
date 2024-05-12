@@ -62,6 +62,11 @@ prompts = ["photo of a crack defect image",
             "photo of a crack corrosion image"]
 ```
 
+| Original | Corrosion |
+|:--------:|:---------:|
+| ![Original](./fig/result_3.png) |
+
+
 ![Figure 3](./fig/result_3.png)
 It can be confirmed that the defect is corroded compared to the original.
 ```bash
