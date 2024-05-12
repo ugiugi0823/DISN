@@ -10,9 +10,13 @@ This repository contains:
 
 * 🪐 A simple PyTorch [implementation](run.sh) of DISN
 * ⚡️ Easy Data Augmentation Using our methodology [implementation](run_dataset.sh) 
-* 💥 [Colab notebook](http://colab.research.google.com/github/facebookresearch/DiT/blob/main/run_DiT.ipynb) for running DISN
+* 💥 Our LoRA weight [LoRA](./lora/pytorch_lora_weights.safetensors)
 
+## To Do
 
+- [x] LoRA weight upload 
+- [x] Create a Dataset Double 
+- [ ] Making long options in Various Defect Generation [implementation](run_various.sh)  
 
 ## Setup
 
@@ -41,10 +45,11 @@ bash run.sh
 
 
 ## What if you actually wanted to double up your existing dataset?
-
+If you want to use your dataset, please modify the --original_dataset_path in run_dataset.sh.
 ```bash
 bash run_dataset.sh
 ```
+Check results.txt later to check PSNR, SSIM, and LPIPS score.
 
 
 
