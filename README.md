@@ -64,10 +64,8 @@ prompts = ["photo of a crack defect image",
 
 | Original | Corrosion |
 |:--------:|:---------:|
-| ![Original](./fig/result_3.png) |
+| ![Original](./fig/result_0.png)| ![Corrosion](./fig/result_3.png) |
 
-
-![Figure 3](./fig/result_3.png)
 It can be confirmed that the defect is corroded compared to the original.
 ```bash
 bash scripts/run_various.sh
