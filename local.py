@@ -19,7 +19,7 @@ from null import *
 from local import *
 
 
-# CUDA_VISIBLE_DEVICES=1 python run.py
+
 device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 tokenizer = AutoTokenizer.from_pretrained("openai/clip-vit-base-patch32")
 

@@ -7,11 +7,6 @@ from local import AttentionStore, show_cross_attention, run_and_display, make_co
 
 
 
-
-# CUDA_VISIBLE_DEVICES=4 python run.py
-
-
-
 def main(args):
     
     prompt = args.prompt

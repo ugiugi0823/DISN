@@ -16,7 +16,7 @@ This repository contains:
 
 - [x] LoRA weight upload 
 - [x] Create a Dataset Double 
-- [ ] Making long options in Various Defect Generation [implementation](run_various.sh)  
+- [ ] Making long options in Various Defect Generation 
 
 ## Setup
 
@@ -43,13 +43,13 @@ It is very similar to the original, but with psnr numbers, you can create a comp
 
 
 ```bash
-bash run.sh
+bash scripts/run.sh
 ```
 
 ## What if you actually wanted to double up your existing dataset?
 If you want to use your dataset, please modify the --original_dataset_path in run_dataset.sh.
 ```bash
-bash run_dataset.sh
+bash scripts/run_dataset.sh
 ```
 Check results.txt later to check PSNR, SSIM, and LPIPS score.
 
@@ -57,7 +57,7 @@ Check results.txt later to check PSNR, SSIM, and LPIPS score.
 ## If you want to see various defect like the picture below [Not Yet]
 ![Figure 3](./fig/result_3.png)
 ```bash
-bash run_dataset.sh
+bash scripts/run_various.sh
 ```
 
 
