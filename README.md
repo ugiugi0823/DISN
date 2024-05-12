@@ -17,6 +17,8 @@ This repository contains:
 - [x] LoRA weight upload 
 - [x] Create a Dataset Double 
 - [ ] Making long options in Various Defect Generation 
+- [ ] Image size 1024 version
+
 
 ## Setup
 

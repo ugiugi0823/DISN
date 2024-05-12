@@ -122,7 +122,7 @@ def main(args):
                 
                 file2.write(f'{psnr_value:.2f}, {ssim_value:.4f}, {lpips_value:.4f}, {file}\n')
                 
-            print("🌊 Check out all the results in results.txt!")
+        print("🌊 Check out all the results in results.txt!")
 
   
     
