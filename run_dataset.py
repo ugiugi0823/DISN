@@ -1,4 +1,4 @@
-import gc, pickle, torch, os, argparse, sys
+import gc, pickle, torch, os, argparse, sys, cv2, lpips
 import ptp_utils, seq_aligner
 
 
@@ -7,11 +7,15 @@ from diffusers import  DiffusionPipeline, DDIMScheduler
 from null import NullInversion
 from local import AttentionStore, show_cross_attention, run_and_display, make_controller
 
+from skimage.metrics import peak_signal_noise_ratio as psnr
+from skimage.metrics import structural_similarity as ssim
+from torchvision import transforms
+
 
 
 
 def main(args):
-
+    
     device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
     scheduler = DDIMScheduler(beta_start=0.00085, beta_end=0.012, beta_schedule="scaled_linear", clip_sample=False, set_alpha_to_one=False)
     model = "stabilityai/stable-diffusion-xl-base-1.0"
@@ -70,7 +74,59 @@ def main(args):
         
         bar.set_description(f"Creating {i}/{len(image_files)}-th {file_name}")
         bar.update()
+    
+    
+    
+    
+    if args.datacheck:
         
+        image_path = args.original_dataset_path
+        directory = args.new_dataset_path
+        
+        original_files = os.listdir(image_path)
+        new_files = os.listdir(directory)
+        
+        results_file = 'results.txt'
+        with open(results_file, 'w') as file2:
+            file2.write('PSNR, SSIM, LPIPS, File\n')
+
+        
+        matched_files = [file for file in original_files if f'new_{file}' in new_files]
+        
+        percept = lpips.LPIPS(net='vgg').cuda()
+        transform = transforms.Compose([
+            transforms.ToTensor(),
+            transforms.Resize((256, 256)),
+            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+        ])
+        
+        
+        for file in matched_files:
+            print("Check",file)
+
+            original_image = cv2.imread(os.path.join(image_path, file))
+            original_image = cv2.resize(original_image, (512, 512))
+            new_image = cv2.imread(os.path.join(directory, f'new_{file}'))
+            
+            imageA_t = transform(original_image).unsqueeze(0).cuda()
+            imageB_t = transform(new_image).unsqueeze(0).cuda()
+            
+            # PSNR 
+            psnr_value = psnr(original_image, new_image)
+            # SSIM 
+            ssim_value, _ = ssim(original_image, new_image, full=True, channel_axis=2, win_size=7)
+            
+            # LPIPS
+            lpips_value = percept(imageA_t, imageB_t).item()
+            with open(results_file, 'a') as file2:
+                
+                file2.write(f'{psnr_value:.2f}, {ssim_value:.4f}, {lpips_value:.4f}, {file}\n')
+                
+            print("🌊 Check out all the results in results.txt!")
+
+  
+    
+    
 
 
 
@@ -81,6 +137,7 @@ if __name__ == '__main__':
     p.add_argument("--prompt", type=str, default="photo of a crack defect image", help="Positive Prompt")  
     p.add_argument("--neg_prompt", type=str, default="", help="Negative Prompt")  
     p.add_argument("--bigger", action='store_true', help="If you want to create an image 1024")
+    p.add_argument("--datacheck", action='store_true', help="If you want to compare the generated image with the original image")
   
   
   

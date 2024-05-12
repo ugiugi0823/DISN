@@ -1,10 +1,14 @@
+import cv2, lpips
 import numpy as np
 import torch, datetime, pytz
+
 from PIL import Image, ImageDraw, ImageFont
-import cv2
 from typing import Optional, Union, Tuple, List, Callable, Dict
 from IPython.display import display
 from tqdm.notebook import tqdm
+from skimage.metrics import peak_signal_noise_ratio as psnr
+from skimage.metrics import structural_similarity as ssim
+from torchvision import transforms
 
 
 def text_under_image(image: np.ndarray, text: str, text_color: Tuple[int, int, int] = (0, 0, 0)):
@@ -12,7 +16,6 @@ def text_under_image(image: np.ndarray, text: str, text_color: Tuple[int, int, i
     offset = int(h * .2)
     img = np.ones((h + offset, w, c), dtype=np.uint8) * 255
     font = cv2.FONT_HERSHEY_SIMPLEX
-
     img[:h] = image
     textsize = cv2.getTextSize(text, font, 1, 2)[0]
     text_x, text_y = (w - textsize[0]) // 2, h + offset - textsize[1] // 2
@@ -47,31 +50,88 @@ def view_images(images, num_rows=1, offset_ratio=0.02):
     seoul_tz = pytz.timezone("Asia/Seoul")
     current_time = datetime.datetime.now(seoul_tz).strftime("%Y-%m-%dT%H-%M-%S")
     pil_img.save(f"./result/result_{current_time}.png")
+    print(f"Image saved as ./result/result_{current_time}.png ") 
     display(pil_img)
     
     
-def save_individual_images(images, directory="./result"):
-
+ 
+        
+        
+def save_individual_images(images,directory="./result"):
     if not isinstance(images, list):
         images = [images]
         
+    if len(images) < 3:
+        raise ValueError("At least three images are required to compare index 0 and 2.")
+    
+    # Saving images
+    pil_img = Image.fromarray(images[2].astype(np.uint8))
+    
+    seoul_tz = pytz.timezone("Asia/Seoul")
+    current_time = datetime.datetime.now(seoul_tz).strftime("%Y-%m-%dT%H-%M-%S")
 
-    for index, image in enumerate(images):
+    file_path = f"{directory}/result_{current_time}_new.png"
+    pil_img.save(file_path)
+    print(f"Image saved as {file_path}")  
+    
+    
+    # Comparing images at index 0 and 2
+    image0 = images[0].astype(np.uint8)
+    image2 = images[2].astype(np.uint8)
+    
+    
+    
+    
+    psnr_value = psnr(image0, image2)
+    ssim_value, _ = ssim(image0, image2, full=True, channel_axis=2,win_size=7)
+    
+    
+    print(f"🔥 PSNR original vs new: {psnr_value:.2f}")
+    print(f"🔥 SSIM original vs new: {ssim_value:.3f}")  
+    print(f"🔥 LPIPS took a long time so I excluded it. Check it out later in results.txt! ") 
 
-        image = image.astype(np.uint8)
+    
+
+
+def make_dataset(images,directory="./new_dataset", image_path=None):
+    if not isinstance(images, list):
+        images = [images]
         
+    if len(images) < 3:
+        raise ValueError("At least three images are required to compare index 0 and 2.")
+    
+    # Saving images
+    pil_img = Image.fromarray(images[2].astype(np.uint8))
+    
+    
+    file_path = f"{directory}/new_{image_path}"
+    pil_img.save(file_path)
+    print(f"Image saved as {file_path}") 
+    
+    percept = lpips.LPIPS(net='vgg').cuda()
+    transform = transforms.Compose([
+        transforms.ToTensor(),
+        transforms.Resize((256, 256)),
+        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+    ]) 
+    
 
-        pil_img = Image.fromarray(image)
-        
-
-        seoul_tz = pytz.timezone("Asia/Seoul")
-        current_time = datetime.datetime.now(seoul_tz).strftime("%Y-%m-%dT%H-%M-%S")
-        
-        
-        file_path = f"{directory}/result_{current_time}_{index}.png"
-        pil_img.save(file_path)
-        print(f"Image {index} saved as {file_path}")    
-
+    # Comparing images at index 0 and 2
+    image0 = images[0].astype(np.uint8)
+    image2 = images[1].astype(np.uint8)
+    
+    imageA_t = transform(image0).unsqueeze(0).cuda()
+    imageB_t = transform(image2).unsqueeze(0).cuda()
+    
+    
+    
+    psnr_value = psnr(image0, image2)
+    ssim_value, _ = ssim(image0, image2, full=True, channel_axis=2,win_size=7)
+    lpips_value = percept(imageA_t, imageB_t).item()
+    
+    print(f"🔥 PSNR original vs new: {psnr_value:.2f}")
+    print(f"🔥 SSIM original vs new: {ssim_value:.3f}")  
+    print(f"🔥 LPIPS original vs new: {lpips_value:.3f}")  
 
 
 def diffusion_step(model, controller, latents, context, context_p, add_time_ids, t, guidance_scale, low_resource=False):
@@ -101,11 +161,9 @@ def diffusion_step(model, controller, latents, context, context_p, add_time_ids,
 
 
 def latent2image(vae, latents):
-
+    
     latents = 1 / 0.13025 * latents
     image = vae.decode(latents)['sample']
-    
-
     image = (image / 2 + 0.5).clamp(0, 1)
     image = image.cpu().permute(0, 2, 3, 1).numpy()
     image = (image * 255).round().astype(np.uint8)
@@ -116,10 +174,14 @@ def init_latent(latent, model, height, width, generator, batch_size):
     if latent is None:
         print("init_latent-- latent is None:")
         latent = torch.randn(
-            (1, model.unet.in_channels, height // 8, width // 8),
-            generator=generator,
-        )
-    latents = latent.expand(batch_size,  model.unet.in_channels, height // 8, width // 8).to(model.device)
+            (1, model.unet.config.in_channels, height // 8, width // 8),
+            generator=generator)
+        
+    if latent.size()[-1] == 128:
+        latents = latent.expand(batch_size,  model.unet.config.in_channels, height // 8, width // 8).to(model.device)
+        
+    else:
+        latents = latent.expand(batch_size,  model.unet.config.in_channels, height // 16, width // 16).to(model.device)
     
     latents = latents * model.scheduler.init_noise_sigma
     
@@ -127,9 +189,13 @@ def init_latent(latent, model, height, width, generator, batch_size):
     return latent, latents
 
 
+
+
+
 def register_attention_control(model, controller):
     def ca_forward(self, place_in_unet):
-
+            
+            
             
             def forward(hidden_states, encoder_hidden_states=None, attention_mask=None,temb=None,scale=1.0):
         
@@ -174,45 +240,35 @@ def register_attention_control(model, controller):
                 key = self.head_to_batch_dim(key)
                 value = self.head_to_batch_dim(value)
                 
-                """
-                torch.Size([10, 1024, 64])
-                torch.Size([10, 1024, 64])
-                torch.Size([10, 1024, 64])
-                """
-                if query.size()[0] == key.size()[0]:
-                    pass
-                else:
-                    print("암장아유")
+                
+                
 
                 attention_probs = self.get_attention_scores(query, key, attention_mask)
                 if hasattr(self, "store_attn_map"):
 
                     self.attn_map = attention_probs
-                # torch.Size([10, 1024, 1024])
-                attention_probs2 = controller(attention_probs, is_cross, place_in_unet)
-                # torch.Size([10, 1024, 1024])
-            
-                hidden_states = torch.bmm(attention_probs2, value)
-                # torch.Size([10, 1024, 64])
                 
+                controller(attention_probs, is_cross, place_in_unet)
             
+                hidden_states = torch.bmm(attention_probs, value)
+                
                 hidden_states = self.batch_to_head_dim(hidden_states)
-                # torch.Size([1, 1024, 640])
+                
                 
                 # linear proj
                 hidden_states = self.to_out[0](hidden_states, scale=scale)
                 # dropout
                 hidden_states = self.to_out[1](hidden_states)
                 
-                
-                
-                
+
                 if input_ndim == 4:
                     hidden_states = hidden_states.transpose(-1, -2).reshape(batch_size, channel, height, width)
 
                 if self.residual_connection:
                     hidden_states = hidden_states + residual
 
+                # hidden_states = hidden_states / self.rescale_output_factor
+                # to_out(hidden_states)
                 return hidden_states 
             return forward
 
@@ -226,15 +282,11 @@ def register_attention_control(model, controller):
             self.num_att_layers = 0
 
     if controller is None:
-
+        print("🌊 Dummy Controller Declaration because there is no Controller")
         controller = DummyController()
 
     def register_recr(net_, count, place_in_unet):
-        
-        
-        # if net_.__class__.__name__ == 'CrossAttention':
         if net_.__class__.__name__ == 'Attention':
-
             net_.forward = ca_forward(net_, place_in_unet)
             return count + 1
         elif hasattr(net_, 'children'):

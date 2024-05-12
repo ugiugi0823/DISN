@@ -1,30 +1,40 @@
-# DISN: Deterministic Synthesis of Defect Images using Null Optimization
+## DISN: Deterministic Synthesis of Defect Images using Null Optimization<br><sub>Official PyTorch Implementation</sub>
 
 ![Figure 1](./fig/Figure1.jpg)
-
-## abstract
-In the manufacturing industry, defect classification is crucial but hampered by challenges from imbalanced data, which often leads to model overfitting when data is scarce. One common solution is to use synthetic data from generative models; however, these models typically produce results that are structurally inconsistent. Addressing these concerns, this paper introduces a novel Null Embedding Optimization technique that generates latent representations closely resembling the original images, significantly enhancing the fidelity of generated images. This method ensures that synthetic images are not only visually similar to the originals but also subjected to a more extensive and diverse augmentation process, increasing the variability within the dataset. Consequently, this approach effectively doubles the usable dataset size and notably boosts the accuracy of AI classification models by up to 8\%. For those interested, the dataset and source code are accessible at https://github.com/ugiugi0823/DISN.
-![Figure 3](./fig/Figure3.jpg)
+This repo contains PyTorch model definitions, pre-trained weights and training/sampling code for our paper exploring Deterministic Synthesis of Defect Images using Null Optimization (DISN) 
 
 
 
-## Configuration Settings
 
-pip install [Highly recommended]
+This repository contains:
+
+* 🪐 A simple PyTorch [implementation](run.sh) of DISN
+* ⚡️ Easy Data Augmentation Using our methodology [implementation](run_dataset.sh) 
+* 💥 [Colab notebook](http://colab.research.google.com/github/facebookresearch/DiT/blob/main/run_DiT.ipynb) for running DISN
+
+
+
+## Setup
+
+First, download and set up the repo:
+
+
+```bash
+git clone https://github.com/ugiugi0823/DISN.git
+cd DISN
 ```
-pip install -r requirements.txt
-```
-or
 
-conda env list
-```
-conda env create -f environment.yaml
+We provide an environment.yml file that can be used to create a Conda environment. If you only want to run pre-trained models locally on CPU, you can remove the cudatoolkit and pytorch-cuda requirements from the file.
+```bash
+conda env create -f environment.yml
+conda activate addib
 ```
 
 
-## If you want to see the demo
-```
-python run.py
+## If you want to see the demo like the picture below
+![Figure 2](./fig/Figure2.png)
+```bash
+bash run.sh
 ```
 
 
@@ -32,12 +42,20 @@ python run.py
 
 ## What if you actually wanted to double up your existing dataset?
 
-```
-bash run.sh
+```bash
+bash run_dataset.sh
 ```
 
-or
 
-```
-CUDA_VISIBLE_DEVICES=5 python run_dataset.py --original_dataset_path "./original_dataset" --new_dataset_path "./new_dataset" --prompt "photo of a crack defect image" --neg_prompt " "
-```
+
+
+
+
+## Acknowledgments
+This work was supported by the Institute for Institute of Information \& communications Technology Planning \& Evaluation (IITP) funded by the Ministry of Science and ICT, Government of the Republic of Korea under Project Number RS-2022-00155915. This work was supported by Inha University Research Grant.
+
+
+
+
+## License
+The code and model weights are licensed under CC-BY-NC. See [`LICENSE.txt`](LICENSE.txt) for details.

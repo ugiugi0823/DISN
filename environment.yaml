@@ -42,7 +42,7 @@ dependencies:
       - contourpy==1.1.1
       - cycler==0.12.1
       - debugpy==1.8.1
-      - decorator==5.1.1
+      - decorator==4.4.2
       - defusedxml==0.7.1
       - diffusers==0.21.4
       - exceptiongroup==1.2.0
@@ -53,11 +53,14 @@ dependencies:
       - fqdn==1.5.1
       - fsspec==2024.2.0
       - ftfy==6.1.3
+      - gdown==5.1.0
       - h11==0.14.0
       - httpcore==1.0.4
       - httpx==0.27.0
       - huggingface-hub==0.21.4
       - idna==3.6
+      - imageio==2.34.0
+      - imageio-ffmpeg==0.4.9
       - importlib-metadata==7.0.2
       - importlib-resources==6.1.3
       - ipykernel==6.29.3
@@ -83,10 +86,13 @@ dependencies:
       - jupyterlab-server==2.25.3
       - jupyterlab-widgets==3.0.10
       - kiwisolver==1.4.5
+      - lazy-loader==0.4
+      - lpips==0.1.3
       - markupsafe==2.1.5
       - matplotlib==3.7.5
       - matplotlib-inline==0.1.6
       - mistune==3.0.2
+      - moviepy==1.0.3
       - mpmath==1.3.0
       - nbclient==0.9.0
       - nbconvert==7.16.2
@@ -111,13 +117,16 @@ dependencies:
       - opencv-python==4.9.0.80
       - overrides==7.7.0
       - packaging==23.2
+      - pandas==2.0.3
       - pandocfilters==1.5.1
       - parso==0.8.3
+      - peft==0.10.0
       - pexpect==4.9.0
       - pickleshare==0.7.5
       - pillow==10.2.0
       - pkgutil-resolve-name==1.3.10
       - platformdirs==4.2.0
+      - proglog==0.1.10
       - prometheus-client==0.20.0
       - prompt-toolkit==3.0.43
       - psutil==5.9.8
@@ -126,9 +135,11 @@ dependencies:
       - pycparser==2.21
       - pygments==2.17.2
       - pyparsing==3.1.2
+      - pysocks==1.7.1
       - python-dateutil==2.9.0.post0
       - python-json-logger==2.0.7
       - pytz==2024.1
+      - pywavelets==1.4.1
       - pyyaml==6.0.1
       - pyzmq==25.1.2
       - qtconsole==5.5.1
@@ -140,6 +151,7 @@ dependencies:
       - rfc3986-validator==0.1.1
       - rpds-py==0.18.0
       - safetensors==0.4.2
+      - scikit-image==0.21.0
       - scipy==1.10.1
       - send2trash==1.8.2
       - six==1.16.0
@@ -148,17 +160,20 @@ dependencies:
       - stack-data==0.6.3
       - sympy==1.12
       - terminado==0.18.0
+      - tifffile==2023.7.10
       - tinycss2==1.2.1
       - tokenizers==0.15.2
       - tomli==2.0.1
       - torch==2.2.1
+      - torchvision==0.17.1
       - tornado==6.4
-      - tqdm==4.66.2
+      - tqdm==4.66.4
       - traitlets==5.14.1
       - transformers==4.38.2
       - triton==2.2.0
       - types-python-dateutil==2.8.19.20240106
       - typing-extensions==4.10.0
+      - tzdata==2024.1
       - uri-template==1.3.0
       - urllib3==2.2.1
       - wcwidth==0.2.13
@@ -166,5 +181,6 @@ dependencies:
       - webencodings==0.5.1
       - websocket-client==1.7.0
       - widgetsnbextension==4.0.10
+      - xformers==0.0.25.post1
       - zipp==3.17.0
 prefix: /home/oem/miniconda3/envs/addib

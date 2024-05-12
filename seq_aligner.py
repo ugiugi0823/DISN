@@ -181,7 +181,8 @@ def get_replacement_mapper_(x: str, y: str, tokenizer, max_len=77):
             mapper[j, j] = 1
             i += 1
             j += 1
-
+    # torch.from_numpy(mapper).float()
+    #torch.from_numpy(mapper).to(torch.float16)
     return torch.from_numpy(mapper).float()
 
 
