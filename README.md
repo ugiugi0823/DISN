@@ -55,7 +55,15 @@ Check results.txt later to check PSNR, SSIM, and LPIPS score.
 
 
 ## If you want to see various defect like the picture below [Not Yet]
+Results of changing text to defect > correlation using existing prompts
+
+```
+prompts = ["photo of a crack defect image",
+            "photo of a crack corrosion image"]
+```
+
 ![Figure 3](./fig/result_3.png)
+It can be confirmed that the defect is corroded compared to the original.
 ```bash
 bash scripts/run_various.sh
 ```
