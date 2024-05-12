@@ -55,7 +55,7 @@ Check results.txt later to check PSNR, SSIM, and LPIPS score.
 
 
 ## If you want to see various defect like the picture below [Not Yet]
-![Figure 3](./fig/result_3.jpg)
+![Figure 3](./fig/result_3.png)
 ```bash
 bash run_dataset.sh
 ```
