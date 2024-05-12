@@ -36,7 +36,11 @@ conda activate addib
 
 
 ## If you want to see the demo like the picture below
-![Figure 2](./fig/Figure2.png)
+| Original | Generated |
+|:--------:|:---------:|
+| ![Original](./fig/result_0.png) | ![Generated](./fig/result_1.png) |
+
+
 ```bash
 bash run.sh
 ```

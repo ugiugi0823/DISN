@@ -57,13 +57,13 @@ def main(args):
     ###################################### Various Defect Generation 
 
     prompts = ["photo of a crack defect image",
-            "photo of a red defect image"]
+            "photo of a crack corrosion image"]
     neg_prompts = [neg_prompt, neg_prompt] 
 
     cross_replace_steps = {'default_':1.0,}
     self_replace_steps = 0.4
-    blend_word = ((('crack',), ("red",))) 
-    eq_params = {"words": ("red",), "values": (2,)} # amplify attention to the word "red" by *2
+    blend_word = ((('defect',), ("corrosion",))) 
+    eq_params = {"words": ("corrosion",), "values": (2,)} # amplify attention to the word "red" by *2
 
 
     controller = make_controller(DISN,prompts, True, cross_replace_steps, self_replace_steps, blend_word, eq_params, blend_word)
