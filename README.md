@@ -36,6 +36,7 @@ conda activate addib
 
 
 ## If you want to see the demo like the picture below
+It is very similar to the original, but with psnr numbers, you can create a completely different image.
 | Original | Generated |
 |:--------:|:---------:|
 | ![Original](./fig/result_0.png) | ![Generated](./fig/result_1.png) |
@@ -45,9 +46,6 @@ conda activate addib
 bash run.sh
 ```
 
-
-
-
 ## What if you actually wanted to double up your existing dataset?
 If you want to use your dataset, please modify the --original_dataset_path in run_dataset.sh.
 ```bash
@@ -56,6 +54,11 @@ bash run_dataset.sh
 Check results.txt later to check PSNR, SSIM, and LPIPS score.
 
 
+## If you want to see various defect like the picture below [Not Yet]
+![Figure 1](./fig/result_3.jpg)
+```bash
+bash run_dataset.sh
+```
 
 
 
