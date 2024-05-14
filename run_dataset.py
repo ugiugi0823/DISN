@@ -1,7 +1,8 @@
 import gc, pickle, torch, os, argparse, sys, cv2, lpips
 import ptp_utils, seq_aligner
+import numpy as np
 
-
+from PIL import Image
 from tqdm import tqdm
 from diffusers import  DiffusionPipeline, DDIMScheduler
 from null import NullInversion
@@ -15,6 +16,7 @@ from torchvision import transforms
 
 
 def main(args):
+    
     
     device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
     scheduler = DDIMScheduler(beta_start=0.00085, beta_end=0.012, beta_schedule="scaled_linear", clip_sample=False, set_alpha_to_one=False)
@@ -77,7 +79,7 @@ def main(args):
     
     
     
-    
+   
     if args.datacheck:
         
         image_path = args.original_dataset_path
@@ -103,10 +105,14 @@ def main(args):
         
         for file in matched_files:
             print("Check",file)
-
-            original_image = cv2.imread(os.path.join(image_path, file))
-            original_image = cv2.resize(original_image, (512, 512))
-            new_image = cv2.imread(os.path.join(directory, f'new_{file}'))
+            
+            original_image = Image.open(os.path.join(image_path, file))
+            original_image = original_image.resize((512, 512))
+            new_image = Image.open(os.path.join(directory, f'new_{file}'))
+            
+            original_image = np.array(original_image)
+            new_image = np.array(new_image)
+            
             
             imageA_t = transform(original_image).unsqueeze(0).cuda()
             imageB_t = transform(new_image).unsqueeze(0).cuda()
@@ -115,7 +121,6 @@ def main(args):
             psnr_value = psnr(original_image, new_image)
             # SSIM 
             ssim_value, _ = ssim(original_image, new_image, full=True, channel_axis=2, win_size=7)
-            
             # LPIPS
             lpips_value = percept(imageA_t, imageB_t).item()
             with open(results_file, 'a') as file2:
