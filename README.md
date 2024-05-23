@@ -59,15 +59,13 @@ Check results.txt later to check PSNR, SSIM, and LPIPS score.
 
 ## 2. If you want to see various defect like the picture below [Not Yet]
 
+| Original | Corrosion |
+|:--------:|:---------:|
+| ![Original](./fig/result_0.png)| ![Corrosion](./fig/result_3.png) |
 ```
 prompts = ["photo of a crack defect image",
             "photo of a crack corrosion image"]
 ```
-
-
-| Original | Corrosion |
-|:--------:|:---------:|
-| ![Original](./fig/result_0.png)| ![Corrosion](./fig/result_3.png) |
 
 ```bash
 bash scripts/run_various.sh
