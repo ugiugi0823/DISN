@@ -32,8 +32,8 @@ cd DISN
 
 We provide an environment.yml file that can be used to create a Conda environment. If you only want to run pre-trained models locally on CPU, you can remove the cudatoolkit and pytorch-cuda requirements from the file.
 ```bash
-conda env create -f environment.yml
-conda activate addib
+conda env create -f environment.yaml
+conda activate dune
 ```
 
 
@@ -49,30 +49,31 @@ bash scripts/run.sh
 ```
 
 ## 1. What if you actually wanted to double up your existing dataset?
-If you want to use your dataset, please modify the --original_dataset_path in run_dataset.sh.
+
 ```bash
 bash scripts/run_dataset.sh
+
 ```
+If you want to use your dataset, please modify the --original_dataset_path in run_dataset.sh.
 Check results.txt later to check PSNR, SSIM, and LPIPS score.
 
 
 ## 2. If you want to see various defect like the picture below [Not Yet]
 Results of changing text to defect > correlation using existing prompts
-
 ```
 prompts = ["photo of a crack defect image",
             "photo of a crack corrosion image"]
 ```
 
+
 | Original | Corrosion |
 |:--------:|:---------:|
 | ![Original](./fig/result_0.png)| ![Corrosion](./fig/result_3.png) |
 
-It can be confirmed that the defect is corroded compared to the original.
 ```bash
 bash scripts/run_various.sh
 ```
-
+It can be confirmed that the defect is corroded compared to the original.
 
 
 
