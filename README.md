@@ -38,16 +38,15 @@ conda activate dune
 
 
 ## 0. If you want to see the demo like the picture below
-It is very similar to the original, but with psnr numbers, you can create a completely different image.
+
 | Original | Generated |
 |:--------:|:---------:|
 | ![Original](./fig/result_0.png) | ![Generated](./fig/result_1.png) |
 
-
 ```bash
 bash scripts/run.sh
 ```
-
+It is very similar to the original, but with psnr numbers, you can create a completely different image.
 ## 1. What if you actually wanted to double up your existing dataset?
 
 ```bash
@@ -59,7 +58,7 @@ Check results.txt later to check PSNR, SSIM, and LPIPS score.
 
 
 ## 2. If you want to see various defect like the picture below [Not Yet]
-Results of changing text to defect > correlation using existing prompts
+
 ```
 prompts = ["photo of a crack defect image",
             "photo of a crack corrosion image"]
@@ -73,6 +72,7 @@ prompts = ["photo of a crack defect image",
 ```bash
 bash scripts/run_various.sh
 ```
+Results of changing text to defect > correlation using existing prompts
 It can be confirmed that the defect is corroded compared to the original.
 
 
