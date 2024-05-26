@@ -80,9 +80,9 @@ This work was supported by the Institute for Institute of Information \& communi
 
 
 <div style="display: flex; justify-content: space-around;">
-  <img src="./fig/inha.png" width="20%">
-  <img src="./fig/ai_center.png" width="40%">
-  <img src="./fig/wta.png" width="40%">
+  <img src="./fig/inha.png" width="10%">
+  <img src="./fig/ai_center.png" width="30%">
+  <img src="./fig/wta.png" width="30%">
 </div>
 
 
