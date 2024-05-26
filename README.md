@@ -23,7 +23,7 @@ This repository contains:
 ## Setup
 
 First, download and set up the repo:
-
+Code has been tested on Cuda 11.8 but other versions should be fine.
 
 ```bash
 git clone https://github.com/ugiugi0823/DISN.git
@@ -78,6 +78,12 @@ It can be confirmed that the defect is corroded compared to the original.
 ## Acknowledgments
 This work was supported by the Institute for Institute of Information \& communications Technology Planning \& Evaluation (IITP) funded by the Ministry of Science and ICT, Government of the Republic of Korea under Project Number RS-2022-00155915. This work was supported by Inha University Research Grant.
 
+
+<div style="display: flex; justify-content: space-around;">
+  <img src="./fig/inha.png" width="30%">
+  <img src="./fig/ai_center.png" width="30%">
+  <img src="./figwta.png" width="30%">
+</div>
 
 
 
