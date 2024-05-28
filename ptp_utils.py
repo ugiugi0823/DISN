@@ -4,7 +4,6 @@ import torch, datetime, pytz
 
 from PIL import Image, ImageDraw, ImageFont
 from typing import Optional, Union, Tuple, List, Callable, Dict
-from IPython.display import display
 from tqdm.notebook import tqdm
 from skimage.metrics import peak_signal_noise_ratio as psnr
 from skimage.metrics import structural_similarity as ssim
@@ -51,7 +50,7 @@ def view_images(images, num_rows=1, offset_ratio=0.02):
     current_time = datetime.datetime.now(seoul_tz).strftime("%Y-%m-%dT%H-%M-%S")
     pil_img.save(f"./result/result_{current_time}.png")
     print(f"Image saved as ./result/result_{current_time}.png ") 
-    display(pil_img)
+    
     
     
  
