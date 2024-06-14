@@ -98,17 +98,7 @@ def main(args):
             uncond_embeddings_p = pickle.load(f)
             
         
-            
-         
-    
-        
-        
-
-    
-
-    ###################################### Various Defect Generation 
-  
-    
+    ###################################### Various Defect Generation   
     
     def find_difference(prompt, ch_prompt):
         
@@ -127,11 +117,7 @@ def main(args):
         for word1, word2 in zip(prompt_words, ch_prompt_words):
             if word1 != word2:
                 differences.append(word2)
-        
-        
-        # if len(differences) != 1:
-        #     raise ValueError("두 문장에서 다른 단어가 정확히 하나가 아닙니다.")
-        
+    
         return differences[0]
     
     

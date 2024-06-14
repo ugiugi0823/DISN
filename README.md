@@ -16,8 +16,8 @@ This repository contains:
 
 - [x] LoRA weight upload 
 - [x] Create a Dataset Double 
-- [ ] Making long options in Various Defect Generation 
-- [ ] Image size 1024 version
+- [x] Making long options in Various Defect Generation 
+- [x] Image size 1024 version
 
 
 ## Setup
@@ -46,6 +46,9 @@ conda activate dune
 ```bash
 bash scripts/run.sh
 ```
+```bash
+bash scripts/run_1024.sh
+```
 It is very similar to the original, but with psnr numbers, you can create a completely different image.
 ## 1. What if you actually wanted to double up your existing dataset?
 
@@ -53,11 +56,15 @@ It is very similar to the original, but with psnr numbers, you can create a comp
 bash scripts/run_dataset.sh
 
 ```
+```bash
+bash scripts/run_dataset_1024.sh
+
+```
 If you want to use your dataset, please modify the --original_dataset_path in run_dataset.sh.
 Check results.txt later to check PSNR, SSIM, and LPIPS score.
 
 
-## 2. If you want to see various defect like the picture below [Not Yet]
+## 2. If you want to see various defect like the picture below
 
 | Original | Corrosion | Degradation |
 |:--------:|:---------:| :---------:|
@@ -70,8 +77,21 @@ prompts = ["photo of a crack defect image",
 ```
 
 ```bash
+CUDA_VISIBLE_DEVICES=0 python run_various.py \
+--image_path "./img/[0001]TopBF0.png" \
+--prompt "photo of a crack defect image" \
+--ch_prompt "photo of a crack corrosion image" \
+--neg_prompt " " \
+```
+
+
+```bash
 bash scripts/run_various.sh
 ```
+```bash
+bash scripts/run_various_2024.sh
+```
+
 Results of changing text to defect > correlation using existing prompts
 It can be confirmed that the defect is corroded compared to the original.
 

@@ -9,6 +9,32 @@ from local import AttentionStore, show_cross_attention, run_and_display, make_co
 
 def main(args):
     
+    file_paths = [
+    './pickle/x_t_p.pkl',
+    './pickle/uncond_embeddings_p_p.pkl',
+    './pickle/uncond_embeddings_p.pkl']
+    
+    all_files_exist = all(os.path.exists(path) for path in file_paths)
+
+    if all_files_exist:
+        content_is_none = False
+        for path in file_paths:
+            with open(path, 'rb') as file:
+                content = pickle.load(file)
+                if content is None:
+                    content_is_none = True
+                    break
+
+        if content_is_none:
+            print("🌊 One or more files are empty. Switching to verbose mode.")
+            verbose = True
+        else:
+            print("🌊 All files exist and are non-empty")
+            verbose = False
+    else:
+        print("🌊 All files are missing. Let's start the creation process.")
+        verbose = True
+    
     prompt = args.prompt
     neg_prompt = args.neg_prompt
     image_path = args.image_path
@@ -32,10 +58,31 @@ def main(args):
 
     ###################################### DISN
 
-    null_inversion = NullInversion(DISN)
-    (image_gt, image_enc), x_t, uncond_embeddings, uncond_embeddings_p = null_inversion.invert(image_path, prompt, verbose=True, do_1024=args.bigger)
-    torch.cuda.empty_cache()
-    gc.collect()
+    if verbose==True:
+        null_inversion = NullInversion(DISN)
+        (image_gt, image_enc), x_t, uncond_embeddings, uncond_embeddings_p = null_inversion.invert(image_path, prompt, verbose=verbose, do_1024=args.bigger)
+        torch.cuda.empty_cache()
+        gc.collect()
+        
+        with open('./pickle/x_t_p.pkl', 'wb') as f:
+            pickle.dump(x_t, f)
+        
+        with open('./pickle/uncond_embeddings_p.pkl', 'wb') as f:
+            pickle.dump(uncond_embeddings, f)
+
+        with open('./pickle/uncond_embeddings_p_p.pkl', 'wb') as f:
+            pickle.dump(uncond_embeddings_p, f)
+    else:
+        
+        with open('./pickle/x_t_p.pkl', 'rb') as f:
+            x_t = pickle.load(f)
+        
+        with open('./pickle/uncond_embeddings_p.pkl', 'rb') as f:
+            uncond_embeddings = pickle.load(f)
+            
+
+        with open('./pickle/uncond_embeddings_p_p.pkl', 'rb') as f:
+            uncond_embeddings_p = pickle.load(f)
     
     prompts = [prompt, prompt]
     controller = AttentionStore()
