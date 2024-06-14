@@ -60,7 +60,8 @@ def main(args):
     blend_word = ((('defect',), ("corrosion",))) 
     eq_params = {"words": ("corrosion",), "values": (2,)} # amplify attention to the word "red" by *2
 
-
+    torch.cuda.empty_cache()
+    gc.collect()
     controller = make_controller(DISN,prompts, True, cross_replace_steps, self_replace_steps, blend_word, eq_params, blend_word)
     images, _ = run_and_display(DISN,neg_prompts, prompts, controller, run_baseline=False, latent=x_t, uncond_embeddings=uncond_embeddings,uncond_embeddings_p=uncond_embeddings_p, steps=50)
 

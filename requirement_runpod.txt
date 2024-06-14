@@ -1,0 +1,7 @@
+diffusers==0.21.4
+opencv-python==4.9.0.80
+lpips==0.1.4
+pytz==2024.1
+scikit-image==0.23.2
+compel==2.0.2
+accelerate==0.31.0
