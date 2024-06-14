@@ -71,11 +71,8 @@ Check results.txt later to check PSNR, SSIM, and LPIPS score.
 | ![Original](./fig/result_0.png)| ![Corrosion](./fig/corrosion_[0001]TopBF0.png) | ![Degradation](./fig/degradation_[0001]TopBF0.png) |
 | Original | Peeling | Wear |
 | ![Original](./fig/result_0.png)| ![Peeling](./fig/peeling_[0001]TopBF0.png) | ![wear](./fig/wear_[0001]TopBF0.png) |
-```
-prompts = ["photo of a crack defect image",
-            "photo of a crack corrosion image"]
-```
 
+Try changing `--prompt` and `--ch_prompt!`
 ```bash
 CUDA_VISIBLE_DEVICES=0 python run_various.py \
 --image_path "./img/[0001]TopBF0.png" \
@@ -92,8 +89,7 @@ bash scripts/run_various.sh
 bash scripts/run_various_2024.sh
 ```
 
-Results of changing text to defect > correlation using existing prompts
-It can be confirmed that the defect is corroded compared to the original.
+As a result of changing to various prompts, you can see that it changes in a variety of ways compared to the original.
 
 
 
