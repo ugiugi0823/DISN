@@ -4,6 +4,7 @@ import torch, datetime, pytz
 
 from PIL import Image, ImageDraw, ImageFont
 from typing import Optional, Union, Tuple, List, Callable, Dict
+
 from tqdm.notebook import tqdm
 from skimage.metrics import peak_signal_noise_ratio as psnr
 from skimage.metrics import structural_similarity as ssim
@@ -100,6 +101,40 @@ def save_individual_images(images,directory="./result"):
     print(f"🔥 LPIPS original vs new: {lpips_value:.3f}") 
     
 
+def diff_individual(images):
+    
+    if not isinstance(images, list):
+        print("images not list")
+        images = [images]
+        
+    
+    
+    percept = lpips.LPIPS(net='vgg').cuda()
+    transform = transforms.Compose([
+        transforms.ToTensor(),
+        transforms.Resize((256, 256)),
+        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+    ]) 
+    
+    
+    # Comparing images at index 0 and 2
+    image0 = images[0].astype(np.uint8)
+    image2 = images[1].astype(np.uint8)
+    
+    imageA_t = transform(image0).unsqueeze(0).cuda()
+    imageB_t = transform(image2).unsqueeze(0).cuda()
+    
+    
+    
+    
+    psnr_value = psnr(image0, image2)
+    ssim_value, _ = ssim(image0, image2, full=True, channel_axis=2,win_size=7)
+    lpips_value = percept(imageA_t, imageB_t).item()
+    
+    print(f"🔥 PSNR original vs new: {psnr_value:.2f}")
+    print(f"🔥 SSIM original vs new: {ssim_value:.3f}")  
+    print(f"🔥 LPIPS original vs new: {lpips_value:.3f}") 
+
     
 
 
@@ -119,11 +154,20 @@ def make_dataset(images,directory="./new_dataset", image_path=None):
     print(f"Image saved as {file_path}") 
     
     
+    percept = lpips.LPIPS(net='vgg').cuda()
+    transform = transforms.Compose([
+        transforms.ToTensor(),
+        transforms.Resize((256, 256)),
+        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+    ]) 
     
-
+    
     # Comparing images at index 0 and 2
     image0 = images[0].astype(np.uint8)
-    image2 = images[1].astype(np.uint8)
+    image2 = images[2].astype(np.uint8)
+    
+    imageA_t = transform(image0).unsqueeze(0).cuda()
+    imageB_t = transform(image2).unsqueeze(0).cuda()
     
     
     
@@ -131,11 +175,14 @@ def make_dataset(images,directory="./new_dataset", image_path=None):
     
     psnr_value = psnr(image0, image2)
     ssim_value, _ = ssim(image0, image2, full=True, channel_axis=2,win_size=7)
-    
+    lpips_value = percept(imageA_t, imageB_t).item()
     
     print(f"🔥 PSNR original vs new: {psnr_value:.2f}")
     print(f"🔥 SSIM original vs new: {ssim_value:.3f}")  
-    print(f"🔥 LPIPS took a long time so I excluded it. Check it out later in results.txt! ") 
+    print(f"🔥 LPIPS original vs new: {lpips_value:.3f}") 
+    
+    
+    # print(f"🔥 LPIPS took a long time so I excluded it. Check it out later in results.txt! ") 
 
 
 def diffusion_step(model, controller, latents, context, context_p, add_time_ids, t, guidance_scale, low_resource=False):
@@ -183,6 +230,8 @@ def init_latent(latent, model, height, width, generator, batch_size):
         
     if latent.size()[-1] == 128:
         latents = latent.expand(batch_size,  model.unet.config.in_channels, height // 8, width // 8).to(model.device)
+    elif latent.size()[-1] == 32:
+        latents = latent.expand(batch_size,  model.unet.config.in_channels, height // 32, width // 32).to(model.device)
         
     else:
         latents = latent.expand(batch_size,  model.unet.config.in_channels, height // 16, width // 16).to(model.device)
