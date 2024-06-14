@@ -72,6 +72,16 @@ Check results.txt later to check PSNR, SSIM, and LPIPS score.
 | Original | Peeling | Wear |
 | ![Original](./fig/result_0.png)| ![Peeling](./fig/peeling_[0001]TopBF0.png) | ![wear](./fig/wear_[0001]TopBF0.png) |
 
+| Text        | Image Size | PSNR $\uparrow$ | SSIM $\uparrow$ | LPIPS $\downarrow$ |
+|-------------|-------------|-----------------|-----------------|--------------------|
+| peeling     | 512         | 28.16           | 0.941           | 0.042              |
+| corrosion   | 512         | 29.35           | 0.949           | 0.035              |
+| wear        | 512         | 30.31           | 0.953           | 0.043              |
+| degradation | 512         | **31.68**       | **0.954**       | **0.027**          |
+
+
+
+
 Try changing `--prompt` and `--ch_prompt!`
 ```bash
 CUDA_VISIBLE_DEVICES=0 python run_various.py \
