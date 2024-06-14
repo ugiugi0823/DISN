@@ -83,7 +83,7 @@ Check results.txt later to check PSNR, SSIM, and LPIPS score.
 
 
 
-Try changing `--prompt` and `--ch_prompt!`
+Try changing `--prompt` and `--ch_prompt`
 ```bash
 CUDA_VISIBLE_DEVICES=0 python run_various.py \
 --image_path "./img/[0001]TopBF0.png" \
