@@ -60,7 +60,7 @@ Check results.txt later to check PSNR, SSIM, and LPIPS score.
 ## 2. If you want to see various defect like the picture below [Not Yet]
 
 | Original | Corrosion | Degradation |
-|:--------:|:---------:|
+|:--------:|:---------:| :---------:|
 | ![Original](./fig/result_0.png)| ![Corrosion](./fig/corrosion_[0001]TopBF0.png) | ![Degradation](./fig/degradation_[0001]TopBF0.png) |
 | Original | Peeling | Wear |
 | ![Original](./fig/result_0.png)| ![Peeling](./fig/peeling_[0001]TopBF0.png) | ![wear](./fig/wear_[0001]TopBF0.png) |
