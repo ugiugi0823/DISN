@@ -97,7 +97,7 @@ CUDA_VISIBLE_DEVICES=0 python run_various.py \
 bash scripts/run_various.sh
 ```
 ```bash
-bash scripts/run_various_2024.sh
+bash scripts/run_various_1024.sh
 ```
 
 As a result of changing to various prompts, you can see that it changes in a variety of ways compared to the original.
