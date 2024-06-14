@@ -9,10 +9,18 @@ from local import AttentionStore, show_cross_attention, run_and_display, make_co
 
 def main(args):
     
-    file_paths = [
-    './pickle/x_t_p.pkl',
-    './pickle/uncond_embeddings_p_p.pkl',
-    './pickle/uncond_embeddings_p.pkl']
+    if args.bigger:
+        file_paths = [
+            './pickle/x_t_p_1024.pkl',
+            './pickle/uncond_embeddings_p_p_1024.pkl',
+            './pickle/uncond_embeddings_p_1024.pkl']
+        
+    else:
+        file_paths = [
+            './pickle/x_t_p.pkl',
+            './pickle/uncond_embeddings_p_p.pkl',
+            './pickle/uncond_embeddings_p.pkl']
+    
     
     all_files_exist = all(os.path.exists(path) for path in file_paths)
 
@@ -57,32 +65,33 @@ def main(args):
     DISN.enable_model_cpu_offload()
 
     ###################################### DISN
+    def get_pickle_path(filename, bigger):
+        return f'./pickle/{filename}_1024.pkl' if bigger else f'./pickle/{filename}.pkl'
 
-    if verbose==True:
+    def save_to_pickle(data, filename, bigger):
+        with open(get_pickle_path(filename, bigger), 'wb') as f:
+            pickle.dump(data, f)
+
+    def load_from_pickle(filename, bigger):
+        with open(get_pickle_path(filename, bigger), 'rb') as f:
+            return pickle.load(f)
+
+    if verbose:
         null_inversion = NullInversion(DISN)
         (image_gt, image_enc), x_t, uncond_embeddings, uncond_embeddings_p = null_inversion.invert(image_path, prompt, verbose=verbose, do_1024=args.bigger)
         torch.cuda.empty_cache()
         gc.collect()
-        
-        with open('./pickle/x_t_p.pkl', 'wb') as f:
-            pickle.dump(x_t, f)
-        
-        with open('./pickle/uncond_embeddings_p.pkl', 'wb') as f:
-            pickle.dump(uncond_embeddings, f)
 
-        with open('./pickle/uncond_embeddings_p_p.pkl', 'wb') as f:
-            pickle.dump(uncond_embeddings_p, f)
+        save_to_pickle(x_t, 'x_t_p', args.bigger)
+        save_to_pickle(uncond_embeddings, 'uncond_embeddings_p', args.bigger)
+        save_to_pickle(uncond_embeddings_p, 'uncond_embeddings_p_p', args.bigger)
     else:
-        
-        with open('./pickle/x_t_p.pkl', 'rb') as f:
-            x_t = pickle.load(f)
-        
-        with open('./pickle/uncond_embeddings_p.pkl', 'rb') as f:
-            uncond_embeddings = pickle.load(f)
-            
+        x_t = load_from_pickle('x_t_p', args.bigger)
+        uncond_embeddings = load_from_pickle('uncond_embeddings_p', args.bigger)
+        uncond_embeddings_p = load_from_pickle('uncond_embeddings_p_p', args.bigger)
 
-        with open('./pickle/uncond_embeddings_p_p.pkl', 'rb') as f:
-            uncond_embeddings_p = pickle.load(f)
+
+
     
     prompts = [prompt, prompt]
     controller = AttentionStore()
