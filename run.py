@@ -85,6 +85,10 @@ def main(args):
         save_to_pickle(x_t, 'x_t_p', args.bigger)
         save_to_pickle(uncond_embeddings, 'uncond_embeddings_p', args.bigger)
         save_to_pickle(uncond_embeddings_p, 'uncond_embeddings_p_p', args.bigger)
+        image_inv, x_t = run_and_display(DISN,neg_prompts,prompts, controller, run_baseline=False, latent=x_t, uncond_embeddings=uncond_embeddings, uncond_embeddings_p=uncond_embeddings_p,verbose=False)
+        ptp_utils.view_images([image_gt, image_enc, image_inv[0]])
+        ptp_utils.save_individual_images([image_gt, image_enc, image_inv[0]])
+        show_cross_attention(DISN,prompts,controller, 32, ["up","down","mid"])
     else:
         x_t = load_from_pickle('x_t_p', args.bigger)
         uncond_embeddings = load_from_pickle('uncond_embeddings_p', args.bigger)
@@ -96,14 +100,6 @@ def main(args):
     prompts = [prompt, prompt]
     controller = AttentionStore()
     neg_prompts =  [neg_prompt, neg_prompt]
-
-    image_inv, x_t = run_and_display(DISN,neg_prompts,prompts, controller, run_baseline=False, latent=x_t, uncond_embeddings=uncond_embeddings, uncond_embeddings_p=uncond_embeddings_p,verbose=False)
-    ptp_utils.view_images([image_gt, image_enc, image_inv[0]])
-    ptp_utils.save_individual_images([image_gt, image_enc, image_inv[0]])
-    show_cross_attention(DISN,prompts,controller, 32, ["up","down","mid"])
-
-
-
 
     ###################################### Various Defect Generation 
 
