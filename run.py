@@ -75,6 +75,12 @@ def main(args):
     def load_from_pickle(filename, bigger):
         with open(get_pickle_path(filename, bigger), 'rb') as f:
             return pickle.load(f)
+        
+    
+    
+    prompts = [prompt, prompt]
+    controller = AttentionStore()
+    neg_prompts =  [neg_prompt, neg_prompt]
 
     if verbose:
         null_inversion = NullInversion(DISN)
@@ -97,9 +103,7 @@ def main(args):
 
 
     
-    prompts = [prompt, prompt]
-    controller = AttentionStore()
-    neg_prompts =  [neg_prompt, neg_prompt]
+    
 
     ###################################### Various Defect Generation 
 
