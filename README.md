@@ -149,4 +149,4 @@ This work was supported by the Institute for Institute of Information \& communi
 
 
 ## License
-The code and model weights are licensed under CC-BY-NC. See [`LICENSE.txt`](LICENSE.txt) for details.
+The code and model weights are licensed under the MIT License. See [`LICENSE.txt`](LICENSE.txt) for details.
