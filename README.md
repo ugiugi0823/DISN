@@ -73,26 +73,33 @@ Check results.txt later to check PSNR, SSIM, and LPIPS score.
 | Original | Peeling | Wear |
 | ![Original](./fig/result_0.png)| ![Peeling](./fig/peeling_[0001]TopBF0.png) | ![wear](./fig/wear_[0001]TopBF0.png) |
 
+## 4️⃣ Comparison of Various Defects
 
-## 4️⃣Comparison of various defects
-| Text         | Image Size | PSNR $\uparrow$ | SSIM $\uparrow$ | LPIPS $\downarrow$ |
-|--------------|------------|-----------------|-----------------|--------------------|
-| original     | 512        | 28.79           | 0.879           | 0.046              |
-| original     | 1024       | 31.05           | 0.892           | 0.088              |
-| bilstering   | 512        | 21.90           | 0.909           | 0.090              |
-| bilstering   | 1024       | 24.72           | 0.939           | 0.059              |
-| dent         | 512        | 27.75           | 0.944           | 0.047              |
-| dent         | 1024       | 28.34           | 0.960           | 0.025              |
-| rust         | 512        | 27.54           | 0.938           | 0.051              |
-| rust         | 1024       | 28.76           | 0.948           | 0.040              |
-| peeling      | 512        | 28.16           | 0.941           | 0.042              |
-| peeling      | 1024       | 28.29           | 0.950           | 0.038              |
-| corrosion    | 512        | 29.35           | 0.949           | 0.035              |
-| corrosion    | 1024       | 31.24           | 0.959           | 0.040              |
-| wear         | 512        | 30.31           | 0.953           | 0.043              |
-| wear         | 1024       | 28.71           | 0.950           | 0.030              |
-| degradation  | 512        | **31.68**       | **0.954**       | **0.027**          |
-| degradation  | 1024       | **32.12**       | **0.960**       | **0.028**          |
+### Image Size 512
+
+| Defect Type   | PSNR $\uparrow$ | SSIM $\uparrow$ | LPIPS $\downarrow$ |
+|---------------|-----------------|-----------------|--------------------|
+| original      | 28.79           | 0.879           | 0.046              |
+| bilstering    | 21.90           | 0.909           | 0.090              |
+| dent          | 27.75           | 0.944           | 0.047              |
+| rust          | 27.54           | 0.938           | 0.051              |
+| peeling       | 28.16           | 0.941           | 0.042              |
+| corrosion     | 29.35           | 0.949           | 0.035              |
+| wear          | 30.31           | 0.953           | 0.043              |
+| degradation   | **31.68**       | **0.954**       | **0.027**          |
+
+### Image Size 1024
+
+| Defect Type   | PSNR $\uparrow$ | SSIM $\uparrow$ | LPIPS $\downarrow$ |
+|---------------|-----------------|-----------------|--------------------|
+| original      | 31.05           | 0.892           | 0.088              |
+| bilstering    | 24.72           | 0.939           | 0.059              |
+| dent          | 28.34           | 0.960           | 0.025              |
+| rust          | 28.76           | 0.948           | 0.040              |
+| peeling       | 28.29           | 0.950           | 0.038              |
+| corrosion     | 31.24           | 0.959           | 0.040              |
+| wear          | 28.71           | 0.950           | 0.030              |
+| degradation   | **32.12**       | **0.960**       | **0.028**          |
 
 
 
