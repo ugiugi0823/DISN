@@ -73,6 +73,27 @@ Check results.txt later to check PSNR, SSIM, and LPIPS score.
 | Original | Peeling | Wear |
 | ![Original](./fig/result_0.png)| ![Peeling](./fig/peeling_[0001]TopBF0.png) | ![wear](./fig/wear_[0001]TopBF0.png) |
 
+Try changing `--prompt` and `--ch_prompt`
+```bash
+CUDA_VISIBLE_DEVICES=0 python run_various.py \
+--image_path "./img/[0001]TopBF0.png" \
+--prompt "photo of a crack defect image" \
+--ch_prompt "photo of a crack corrosion image" \
+--neg_prompt " " \
+```
+
+
+```bash
+bash scripts/run_various.sh
+```
+```bash
+bash scripts/run_various_1024.sh
+```
+
+As a result of changing to various prompts, you can see that it changes in a variety of ways compared to the original.
+
+
+
 ## 4️⃣ Comparison of Various Defects
 
 ### Image Size 512
@@ -103,24 +124,6 @@ Check results.txt later to check PSNR, SSIM, and LPIPS score.
 
 
 
-Try changing `--prompt` and `--ch_prompt`
-```bash
-CUDA_VISIBLE_DEVICES=0 python run_various.py \
---image_path "./img/[0001]TopBF0.png" \
---prompt "photo of a crack defect image" \
---ch_prompt "photo of a crack corrosion image" \
---neg_prompt " " \
-```
-
-
-```bash
-bash scripts/run_various.sh
-```
-```bash
-bash scripts/run_various_1024.sh
-```
-
-As a result of changing to various prompts, you can see that it changes in a variety of ways compared to the original.
 
 
 
