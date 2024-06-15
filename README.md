@@ -52,7 +52,8 @@ bash scripts/run_1024.sh
 ```
 It is very similar to the original, but with psnr numbers, you can create a completely different image.
 ## 2️⃣ What if you actually wanted to double up your existing dataset?
-![Data2x](./fig/data2x.png)
+![Data2x](./fig/data2x.png){ width=400 height=200 }
+
 
 ```bash
 bash scripts/run_dataset.sh
