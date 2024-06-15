@@ -74,7 +74,7 @@ Check results.txt later to check PSNR, SSIM, and LPIPS score.
 | ![Original](./fig/result_0.png)| ![Peeling](./fig/peeling_[0001]TopBF0.png) | ![wear](./fig/wear_[0001]TopBF0.png) |
 
 
-
+## 4️⃣Comparison of various defects
 | Text         | Image Size | PSNR $\uparrow$ | SSIM $\uparrow$ | LPIPS $\downarrow$ |
 |--------------|------------|-----------------|-----------------|--------------------|
 | original     | 512        | 28.79           | 0.879           | 0.046              |
