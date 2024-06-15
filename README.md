@@ -18,7 +18,7 @@ This repository contains:
 - [x] Create a Dataset Double 
 - [x] Making long options in Various Defect Generation 
 - [x] Image size 1024 version
-- [x] 😁 Various Defect comparison tables
+- [x] 😁 Various Defect comparison tables[Link](#-4️⃣-Comparison-of-various-defects)
 
 
 ## Setup
