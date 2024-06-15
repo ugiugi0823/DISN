@@ -37,7 +37,7 @@ conda env create -f environment.yaml
 conda activate dune
 ```
 
-
+<br>
 ## 1️⃣ If you want to see the demo like the picture below
 
 | Original | Generated |
@@ -51,6 +51,8 @@ bash scripts/run.sh
 bash scripts/run_1024.sh
 ```
 It is very similar to the original, but with psnr numbers, you can create a completely different image.
+
+<br>
 ## 2️⃣ What if you actually wanted to double up your existing dataset?
 <img src="./fig/data2x.png" alt="Data2x" width="800" height="400">
 
@@ -67,7 +69,7 @@ bash scripts/run_dataset_1024.sh
 If you want to use your dataset, please modify the --original_dataset_path in run_dataset.sh.
 Check results.txt later to check PSNR, SSIM, and LPIPS score.
 
-
+<br>
 ## 3️⃣ If you want to see various defect like the picture below
 
 | Original | Corrosion | Degradation |
@@ -96,7 +98,7 @@ bash scripts/run_various_1024.sh
 As a result of changing to various prompts, you can see that it changes in a variety of ways compared to the original.
 
 
-
+<br>
 ## 4️⃣ Comparison of Various Defects
 
 ### Image Size 512
