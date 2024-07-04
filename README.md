@@ -169,6 +169,9 @@ Check results.txt later to check PSNR, SSIM, and LPIPS score.
 
 ## 6️⃣ Comparison of Various Defects
 
+eq = 2
+cross = 1.0
+replace = 0.8
 ### Image Size 512
 
 | Defect Type   | PSNR $\uparrow$ | SSIM $\uparrow$ | LPIPS $\downarrow$ |
