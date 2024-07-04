@@ -81,6 +81,15 @@ Check results.txt later to check PSNR, SSIM, and LPIPS score.
 | Original | Peeling | Wear |
 | ![Original](./fig/result_0.png)| ![Peeling](./fig/peeling_[0001]TopBF0.png) | ![wear](./fig/wear_[0001]TopBF0.png) |
 
+
+<div style="display: flex; justify-content: space-around;">
+  <img src="./fig/psnr_3d_surface.png" alt="PSNR 3D Surface" style="width: 30%;">
+  <img src="./fig/ssim_3d_surface.png" alt="SSIM 3D Surface" style="width: 30%;">
+  <img src="./fig/lpips_3d_surface.png" alt="LPIPS 3D Surface" style="width: 30%;">
+</div>
+
+
+
 Try changing `--prompt` and `--ch_prompt`
 ```bash
 CUDA_VISIBLE_DEVICES=0 python run_various.py \
