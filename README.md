@@ -18,7 +18,9 @@ This repository contains:
 - [x] Create a Dataset Double 
 - [x] Making long options in Various Defect Generation 
 - [x] Image size 1024 version
-- [x] 😁 Comparison of various defects(new results)
+
+- [x] 4️⃣ How do we adjust eq and replace? (😁 new results)
+- [x] 6️⃣ Comparison of various defects (😁 new results)
 
 
 ## Setup
@@ -108,7 +110,7 @@ As a result of changing to various prompts, you can see that it changes in a var
 
 <br>
 
-## 5️⃣ How do we adjust eq and replace?
+## 4️⃣ How do we adjust eq and replace?
 <img src="./fig/top_mid_bottom_comparison_combined.png" alt="Top Mid Bottom Comparison" style="width: 100%;">
 
 <div style="display: flex; justify-content: space-around;">
@@ -117,13 +119,14 @@ As a result of changing to various prompts, you can see that it changes in a var
   <img src="./fig/lpips_3d_surface.png" alt="LPIPS 3D Surface" style="width: 32%;">
 </div>
 
-<img src="./fig/image_comparison_with_metrics.png" alt="image_comparison_with_metrics" style="width: 100%;">
+
+For a detailed comparison with metrics, refer to the [image comparison with metrics](./fig/image_comparison_with_metrics.png).
 
 
 
 <br>
 
-## 4️⃣ Comparison of Various Defects
+## 6️⃣ Comparison of Various Defects
 
 ### Image Size 512
 
