@@ -128,11 +128,8 @@ As a result of changing to various prompts, you can see that it changes in a var
 </div>
 
 If you carefully adjust the eq value and replace, you can obtain an image with improved psnr, ssim lpips evaluation indices.!
-
 The eq value is good when it is 0.0~1.0, especially when it is 0.5.
-
 The replace value is consistently good when it is between 2.0 and 10.0.
-
 For a detailed comparison with metrics, refer to the [image comparison with metrics](./fig/image_comparison_with_metrics.png).
 
 <br>
