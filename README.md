@@ -33,11 +33,19 @@ git clone https://github.com/ugiugi0823/DISN.git
 cd DISN
 ```
 
-We provide an environment.yml file that can be used to create a Conda environment. If you only want to run pre-trained models locally on CPU, you can remove the cudatoolkit and pytorch-cuda requirements from the file.
+We provide an environment.yml file that can be used to create a Conda environment. 
 ```bash
 conda env create -f environment.yaml
 conda activate dune
 ```
+
+Computational Costs
+
+| Resolution   | Time     | Peak Memory |
+|--------------|----------|-------------|
+| 512x512      | 238.65s  | 13.66GB     |
+| 1024x1024    | 600.01s  | 53.83GB     |
+
 
 <br>
 
