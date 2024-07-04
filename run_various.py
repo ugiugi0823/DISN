@@ -122,9 +122,9 @@ def main(args):
     
     
     
-    eq = 2
     cross = 1.0
-    replace = 0.8
+    eq = args.eq # 2
+    replace = args.replace # 0.8
     ch_prompt = args.ch_prompt
     prompts = [prompt, ch_prompt]
     
@@ -162,6 +162,8 @@ if __name__ == '__main__':
     p.add_argument("--prompt", type=str, default="photo of a crack defect image", help="Positive Prompt")  
     p.add_argument("--ch_prompt", type=str, default="photo of a crack corrosion image", help="Change Prompt")  
     p.add_argument("--neg_prompt", type=str, default="worst quality", help="Negative Prompt")  
+    p.add_argument("--eq", type=float, default="0.5", help="eq value")  
+    p.add_argument("--replace", type=float, default="8.2", help="replace value")
     p.add_argument("--bigger", action='store_true', help="If you want to create an image 1024")
   
     args = p.parse_args()
