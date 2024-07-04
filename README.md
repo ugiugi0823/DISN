@@ -82,11 +82,6 @@ Check results.txt later to check PSNR, SSIM, and LPIPS score.
 | ![Original](./fig/result_0.png)| ![Peeling](./fig/peeling_[0001]TopBF0.png) | ![wear](./fig/wear_[0001]TopBF0.png) |
 
 
-<div style="display: flex; justify-content: space-around;">
-  <img src="./fig/psnr_3d_surface.png" alt="PSNR 3D Surface" style="width: 32%;">
-  <img src="./fig/ssim_3d_surface.png" alt="SSIM 3D Surface" style="width: 32%;">
-  <img src="./fig/lpips_3d_surface.png" alt="LPIPS 3D Surface" style="width: 32%;">
-</div>
 
 
 
@@ -110,6 +105,21 @@ bash scripts/run_various_1024.sh
 ```
 
 As a result of changing to various prompts, you can see that it changes in a variety of ways compared to the original.
+
+<br>
+
+## 5️⃣ How do we adjust eq and replace?
+<div style="display: flex; justify-content: space-around;">
+  <img src="./fig/psnr_3d_surface.png" alt="PSNR 3D Surface" style="width: 32%;">
+  <img src="./fig/ssim_3d_surface.png" alt="SSIM 3D Surface" style="width: 32%;">
+  <img src="./fig/lpips_3d_surface.png" alt="LPIPS 3D Surface" style="width: 32%;">
+</div>
+
+
+<img src="./fig/top_mid_bottom_comparison_combined.png" alt="Top Mid Bottom Comparison" style="width: 100%;">
+
+<img src="./fig/image_comparison_with_metrics.png" alt="image_comparison_with_metrics" style="width: 100%;">
+
 
 
 <br>
