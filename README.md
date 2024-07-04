@@ -20,6 +20,7 @@ This repository contains:
 - [x] Image size 1024 version
 
 - [x] 4️⃣ How do we adjust eq and replace? (😁 new results)
+- [x] 5️⃣ Augmentation of various defect data (😁 new results)
 - [x] 6️⃣ Comparison of various defects (😁 new results)
 
 
