@@ -127,9 +127,44 @@ As a result of changing to various prompts, you can see that it changes in a var
   <img src="./fig/lpips_3d_surface.png" alt="LPIPS 3D Surface" style="width: 32%;">
 </div>
 
+If you carefully adjust the eq value and replace, you can obtain an image with improved psnr, ssim lpips evaluation indices.!
+
+The eq value is good when it is 0.0~1.0, especially when it is 0.5.
+The replace value is consistently good when it is between 2.0 and 10.0.
 
 For a detailed comparison with metrics, refer to the [image comparison with metrics](./fig/image_comparison_with_metrics.png).
 
+<br>
+
+## 5️⃣ Augmentation of various defect data
+
+Try changing `--prompt` and `--ch_prompt`
+```bash
+CUDA_VISIBLE_DEVICES=0 python run_dataset_various.py \
+--original_dataset_path "./original_dataset" \
+--new_dataset_path "./new_dataset" \
+--prompt "photo of a crack defect image" \
+--ch_prompt "photo of a crack corrosion image" \
+--neg_prompt " " \
+--eq 0.5 \
+--replace 8.2 \
+--datacheck
+```
+
+
+
+
+
+```bash
+bash run_dataset_various.sh
+
+```
+```bash
+bash run_dataset_various_1024.sh
+
+```
+If you want to use your dataset, please modify the --original_dataset_path in run_dataset.sh.
+Check results.txt later to check PSNR, SSIM, and LPIPS score.
 
 
 <br>
