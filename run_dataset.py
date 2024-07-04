@@ -72,7 +72,7 @@ def main(args):
         file_name = file_path.split("/")[-1]
         bar.set_description(f"Creating {i}/{len(image_files)}-th {file_name}")
         
-        # 측정 시작
+        
         start_memory_allocated = memory_allocated()
         start_memory_reserved = memory_reserved()
         start_max_memory_allocated = max_memory_allocated()
