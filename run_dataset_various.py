@@ -14,9 +14,6 @@ from skimage.metrics import structural_similarity as ssim
 from torchvision import transforms
 
 
-# CUDA_VISIBLE_DEVICES=5 python run_dataset_pt.py
-
-
 
 def main(args):
     

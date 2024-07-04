@@ -15,10 +15,6 @@ from torchvision import transforms
 
 
 
-
-
-
-
 def main(args):
     
     
@@ -88,7 +84,7 @@ def main(args):
         torch.cuda.empty_cache()
         gc.collect()
         
-        # 측정 종료
+        
         end_time = time.time()
         
         end_memory_allocated = memory_allocated()
@@ -102,7 +98,7 @@ def main(args):
         peak_memory_allocated = end_max_memory_allocated - start_max_memory_allocated
         peak_memory_reserved = end_max_memory_reserved - start_max_memory_reserved
 
-        # 결과 출력
+        
         print(f"Processing {i}/{len(image_files)}-th {file_name}")
         print(f"Elapsed time: {elapsed_time:.2f} seconds")
         print(f"Memory used (allocated): {memory_used_allocated / (1024 ** 2):.2f} MB")

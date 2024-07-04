@@ -9,13 +9,6 @@ from local import AttentionStore, show_cross_attention, run_and_display, make_co
 
 
 
-
-# CUDA_VISIBLE_DEVICES=4 python run_various.py
-
-
-
-
-
 def main(args):
     
     file_paths = [
