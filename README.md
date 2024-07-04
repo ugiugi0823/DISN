@@ -83,9 +83,9 @@ Check results.txt later to check PSNR, SSIM, and LPIPS score.
 
 
 <div style="display: flex; justify-content: space-around;">
-  <img src="./fig/psnr_3d_surface.png" alt="PSNR 3D Surface" style="width: 50%;">
-  <img src="./fig/ssim_3d_surface.png" alt="SSIM 3D Surface" style="width: 50%;">
-  <img src="./fig/lpips_3d_surface.png" alt="LPIPS 3D Surface" style="width: 50%;">
+  <img src="./fig/psnr_3d_surface.png" alt="PSNR 3D Surface" style="width: 40%;">
+  <img src="./fig/ssim_3d_surface.png" alt="SSIM 3D Surface" style="width: 40%;">
+  <img src="./fig/lpips_3d_surface.png" alt="LPIPS 3D Surface" style="width: 40%;">
 </div>
 
 
