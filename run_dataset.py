@@ -1,4 +1,4 @@
-import gc, pickle, torch, os, argparse, sys, cv2, lpips
+import gc, pickle, torch, os, argparse, sys, cv2, lpips, time
 import ptp_utils, seq_aligner
 import numpy as np
 
@@ -7,10 +7,14 @@ from tqdm import tqdm
 from diffusers import  DiffusionPipeline, DDIMScheduler
 from null import NullInversion
 from local import AttentionStore, show_cross_attention, run_and_display, make_controller
+from torch.cuda import memory_allocated, memory_reserved, max_memory_allocated, max_memory_reserved
 
 from skimage.metrics import peak_signal_noise_ratio as psnr
 from skimage.metrics import structural_similarity as ssim
 from torchvision import transforms
+
+
+
 
 
 
@@ -60,22 +64,55 @@ def main(args):
     
     
     
+
+
     for i, file_path in enumerate(image_files):   
+        start_time = time.time()
+        
         file_name = file_path.split("/")[-1]
         bar.set_description(f"Creating {i}/{len(image_files)}-th {file_name}")
+        
+        # 측정 시작
+        start_memory_allocated = memory_allocated()
+        start_memory_reserved = memory_reserved()
+        start_max_memory_allocated = max_memory_allocated()
+        start_max_memory_reserved = max_memory_reserved()
+        
         (image_gt, image_enc), x_t, uncond_embeddings, uncond_embeddings_p = null_inversion.invert(file_path, prompt, verbose=True, do_1024=args.bigger)  
         torch.cuda.empty_cache()
         gc.collect()
 
-        
         controller = AttentionStore()
-        image_inv, x_t = run_and_display(DISN,neg_prompts,prompts, controller, run_baseline=False, latent=x_t, uncond_embeddings=uncond_embeddings, uncond_embeddings_p=uncond_embeddings_p,verbose=False)
-        ptp_utils.make_dataset([image_gt, image_enc, image_inv[0]],directory, file_name)
+        image_inv, x_t = run_and_display(DISN, neg_prompts, prompts, controller, run_baseline=False, latent=x_t, uncond_embeddings=uncond_embeddings, uncond_embeddings_p=uncond_embeddings_p, verbose=False)
+        ptp_utils.make_dataset([image_gt, image_enc, image_inv[0]], directory, file_name)
         torch.cuda.empty_cache()
         gc.collect()
         
+        # 측정 종료
+        end_time = time.time()
+        
+        end_memory_allocated = memory_allocated()
+        end_memory_reserved = memory_reserved()
+        end_max_memory_allocated = max_memory_allocated()
+        end_max_memory_reserved = max_memory_reserved()
+
+        elapsed_time = end_time - start_time
+        memory_used_allocated = end_memory_allocated - start_memory_allocated
+        memory_used_reserved = end_memory_reserved - start_memory_reserved
+        peak_memory_allocated = end_max_memory_allocated - start_max_memory_allocated
+        peak_memory_reserved = end_max_memory_reserved - start_max_memory_reserved
+
+        # 결과 출력
+        print(f"Processing {i}/{len(image_files)}-th {file_name}")
+        print(f"Elapsed time: {elapsed_time:.2f} seconds")
+        print(f"Memory used (allocated): {memory_used_allocated / (1024 ** 2):.2f} MB")
+        print(f"Memory used (reserved): {memory_used_reserved / (1024 ** 2):.2f} MB")
+        print(f"Peak memory (allocated): {peak_memory_allocated / (1024 ** 2):.2f} MB")
+        print(f"Peak memory (reserved): {peak_memory_reserved / (1024 ** 2):.2f} MB")
+        
         bar.set_description(f"Creating {i}/{len(image_files)}-th {file_name}")
         bar.update()
+
     
     
     
@@ -88,7 +125,8 @@ def main(args):
         original_files = os.listdir(image_path)
         new_files = os.listdir(directory)
         
-        results_file = 'results.txt'
+        
+        results_file = f'{directory}/results.txt'
         with open(results_file, 'w') as file2:
             file2.write('PSNR, SSIM, LPIPS, File\n')
 
@@ -127,7 +165,7 @@ def main(args):
                 
                 file2.write(f'{psnr_value:.2f}, {ssim_value:.4f}, {lpips_value:.4f}, {file}\n')
                 
-        print("🌊 Check out all the results in results.txt!")
+        print(f"🌊 Check out all the results in {results_file}!")
 
   
     
