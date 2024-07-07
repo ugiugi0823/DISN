@@ -1,4 +1,4 @@
-import cv2, lpips
+import cv2, lpips, csv, os
 import numpy as np
 import torch, datetime, pytz
 
@@ -100,14 +100,15 @@ def save_individual_images(images,directory="./result"):
     print(f"🔥 SSIM original vs new: {ssim_value:.3f}")  
     print(f"🔥 LPIPS original vs new: {lpips_value:.3f}") 
     
-
-def diff_individual(images):
+def diff_individual(images, args):
+    ch_prompt = args.ch_prompt
+    eq = args.eq
+    cross = args.cross
+    replace = args.replace
     
     if not isinstance(images, list):
         print("images not list")
         images = [images]
-        
-    
     
     percept = lpips.LPIPS(net='vgg').cuda()
     transform = transforms.Compose([
@@ -116,7 +117,6 @@ def diff_individual(images):
         transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
     ]) 
     
-    
     # Comparing images at index 0 and 2
     image0 = images[0].astype(np.uint8)
     image2 = images[1].astype(np.uint8)
@@ -124,16 +124,27 @@ def diff_individual(images):
     imageA_t = transform(image0).unsqueeze(0).cuda()
     imageB_t = transform(image2).unsqueeze(0).cuda()
     
-    
-    
-    
     psnr_value = psnr(image0, image2)
-    ssim_value, _ = ssim(image0, image2, full=True, channel_axis=2,win_size=7)
+    ssim_value, _ = ssim(image0, image2, full=True, channel_axis=2, win_size=7)
     lpips_value = percept(imageA_t, imageB_t).item()
     
     print(f"🔥 PSNR original vs new: {psnr_value:.2f}")
     print(f"🔥 SSIM original vs new: {ssim_value:.3f}")  
-    print(f"🔥 LPIPS original vs new: {lpips_value:.3f}") 
+    print(f"🔥 LPIPS original vs new: {lpips_value:.3f}")
+    
+    # Get current time in Korea
+    korea_tz = pytz.timezone('Asia/Seoul')
+    current_time = datetime.now(korea_tz).strftime('%Y-%m-%d %H:%M:%S')
+    
+    # Append results to a CSV file
+    csv_file = './csv/results.csv'
+    file_exists = os.path.isfile(csv_file)
+    
+    with open(csv_file, mode='a', newline='') as file:
+        writer = csv.writer(file)
+        if not file_exists:
+            writer.writerow(['timestamp', 'ch_prompt', 'eq', 'cross', 'replace', 'psnr_value', 'ssim_value', 'lpips_value'])
+        writer.writerow([current_time, ch_prompt, eq, cross, replace, psnr_value, ssim_value, lpips_value])
 
     
 

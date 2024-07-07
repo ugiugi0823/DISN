@@ -1,4 +1,4 @@
-import gc, pickle, torch, argparse, os, sys
+import gc, pickle, torch, argparse, os, sys, csv, pytz
 import ptp_utils, seq_aligner
 import numpy as np
 
@@ -6,6 +6,18 @@ from PIL import Image
 from diffusers import  DiffusionPipeline, DDIMScheduler
 from null import NullInversion
 from local import AttentionStore, show_cross_attention, run_and_display, make_controller
+from datetime import datetime
+
+
+import warnings
+warnings.filterwarnings("ignore", category=FutureWarning)
+
+
+
+
+# CUDA_VISIBLE_DEVICES=4 python run_various.py
+
+
 
 
 
@@ -31,7 +43,7 @@ def main(args):
             print("🌊 One or more files are empty. Switching to verbose mode.")
             verbose = True
         else:
-            print("🌊 All files exist and are non-empty")
+            # print("🌊 All files exist and are non-empty")
             verbose = False
     else:
         print("🌊 All files are missing. Let's start the creation process.")
@@ -115,18 +127,16 @@ def main(args):
     
     
     
-    cross = 1.0
-    eq = args.eq # 2
-    replace = args.replace # 0.8
+    eq = args.eq
+    cross = args.cross
+    replace = args.replace
     ch_prompt = args.ch_prompt
     prompts = [prompt, ch_prompt]
     
     pt = find_difference(prompt, ch_prompt)
-    # pt = "defect"
-    print("🌊 ", prompt)
-    print("🌊 ", ch_prompt)
-    print("🌊 The word you want to change = ", pt)
-    
+    print("🌊 pt ", pt)
+    print("🌊 eq",eq)
+    print("🌊 replace",replace)
     
 
     prompts = [prompt,
@@ -155,9 +165,10 @@ if __name__ == '__main__':
     p.add_argument("--prompt", type=str, default="photo of a crack defect image", help="Positive Prompt")  
     p.add_argument("--ch_prompt", type=str, default="photo of a crack corrosion image", help="Change Prompt")  
     p.add_argument("--neg_prompt", type=str, default="worst quality", help="Negative Prompt")  
-    p.add_argument("--eq", type=float, default="0.5", help="eq value")  
-    p.add_argument("--replace", type=float, default="8.2", help="replace value")
     p.add_argument("--bigger", action='store_true', help="If you want to create an image 1024")
+    p.add_argument("--eq", type=float, default=2.0, help="eq") 
+    p.add_argument("--cross", type=float, default=1.0, help="cross") 
+    p.add_argument("--replace", type=float, default=0.8, help="replace") 
   
     args = p.parse_args()
     
