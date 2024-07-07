@@ -22,11 +22,21 @@ warnings.filterwarnings("ignore", category=FutureWarning)
 
 
 def main(args):
+    if args.bigger:
+        print("🩵"*40)
+        print("DO 1024")
+        file_paths = [
+        './pickle/x_t_p_1024.pkl',
+        './pickle/uncond_embeddings_p_p_1024.pkl',
+        './pickle/uncond_embeddings_p_1024.pkl']
+        
+    else: 
+        file_paths = [
+        './pickle/x_t_p.pkl',
+        './pickle/uncond_embeddings_p_p.pkl',
+        './pickle/uncond_embeddings_p.pkl']
     
-    file_paths = [
-    './pickle/x_t_p.pkl',
-    './pickle/uncond_embeddings_p_p.pkl',
-    './pickle/uncond_embeddings_p.pkl']
+    
     
     all_files_exist = all(os.path.exists(path) for path in file_paths)
 
