@@ -9,7 +9,7 @@ from tqdm.notebook import tqdm
 from skimage.metrics import peak_signal_noise_ratio as psnr
 from skimage.metrics import structural_similarity as ssim
 from torchvision import transforms
-from datetime import datetime
+
 
 def text_under_image(image: np.ndarray, text: str, text_color: Tuple[int, int, int] = (0, 0, 0)):
     h, w, c = image.shape
@@ -133,8 +133,9 @@ def diff_individual(images, args):
     print(f"🔥 LPIPS original vs new: {lpips_value:.3f}")
     
     # Get current time in Korea
-    korea_tz = pytz.timezone('Asia/Seoul')
-    current_time = datetime.now(korea_tz).strftime('%Y-%m-%d %H:%M:%S')
+    seoul_tz = pytz.timezone('Asia/Seoul')
+    current_time = datetime.datetime.now(seoul_tz).strftime("%Y-%m-%dT%H-%M-%S")
+    
     
     # Append results to a CSV file
     csv_file = './csv/results.csv'
