@@ -14,10 +14,18 @@ This repository contains:
       alt="Open in Colab"
   />
 </a>
-<br>
 * 🪐 A simple PyTorch [implementation](run.sh) of DISN
 * ⚡️ Easy Synthetic data generation Using our methodology [implementation](run_dataset.sh) 
 * 💥 Our LoRA weight [LoRA](./lora/pytorch_lora_weights.safetensors)
+
+
+* ⭐️ Do it right away with Colab! 
+  <a href="https://colab.research.google.com/drive/1YVs5Oo9VVVzJT2eBFOPJ1U10byhzCQQX?usp=sharing">
+    <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open in Colab"/>
+  </a>
+* 🪐 A simple PyTorch [implementation](https://github.com/your-repo/DISN/blob/main/run.sh) of DISN
+* ⚡️ Easy Synthetic data generation using our methodology [implementation](https://github.com/your-repo/DISN/blob/main/run_dataset.sh) 
+* 💥 Our LoRA weight [LoRA](https://github.com/your-repo/DISN/blob/main/lora/pytorch_lora_weights.safetensors)
 
 
 ## To Do
