@@ -8,17 +8,6 @@ This repo contains PyTorch model definitions, pre-trained weights and training/s
 
 This repository contains:
 
-* ⭐️ Do it right away with colab! 
-<a href="https://colab.research.google.com/drive/1YVs5Oo9VVVzJT2eBFOPJ1U10byhzCQQX?usp=sharing">
-  <img src="https://colab.research.google.com/assets/colab-badge.svg"
-      alt="Open in Colab"
-  />
-</a>
-* 🪐 A simple PyTorch [implementation](run.sh) of DISN
-* ⚡️ Easy Synthetic data generation Using our methodology [implementation](run_dataset.sh) 
-* 💥 Our LoRA weight [LoRA](./lora/pytorch_lora_weights.safetensors)
-
-
 * ⭐️ Do it right away with Colab! 
   <a href="https://colab.research.google.com/drive/1YVs5Oo9VVVzJT2eBFOPJ1U10byhzCQQX?usp=sharing">
     <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open in Colab"/>
