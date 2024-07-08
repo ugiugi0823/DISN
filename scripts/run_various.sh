@@ -3,5 +3,5 @@ CUDA_VISIBLE_DEVICES=0 python run_various.py \
 --prompt "photo of a crack defect image" \
 --ch_prompt "photo of a crack corrosion image" \
 --neg_prompt " " \
---eq 0.5 \
---replace 8.2
+--eq 2.0 \
+--replace 0.8 \

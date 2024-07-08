@@ -9,7 +9,7 @@ This repo contains PyTorch model definitions, pre-trained weights and training/s
 This repository contains:
 
 * 🪐 A simple PyTorch [implementation](run.sh) of DISN
-* ⚡️ Easy Data Augmentation Using our methodology [implementation](run_dataset.sh) 
+* ⚡️ Easy Synthetic data generation Using our methodology [implementation](run_dataset.sh) 
 * 💥 Our LoRA weight [LoRA](./lora/pytorch_lora_weights.safetensors)
 
 ## To Do
@@ -18,10 +18,8 @@ This repository contains:
 - [x] Create a Dataset Double 
 - [x] Making long options in Various Defect Generation 
 - [x] Image size 1024 version
-
-- [x] 4️⃣ How do we adjust eq and replace? (😁 new results)
-- [x] 5️⃣ Augmentation of various defect data (😁 new results)
-- [x] 6️⃣ Comparison of various defects (😁 new results)
+- [x] 4️⃣ Various synthetic data generation (😁 new results)
+- [x] 5️⃣ Comparison of various defects (😁 new results)
 
 
 ## Setup
@@ -62,7 +60,7 @@ bash scripts/run.sh
 ```bash
 bash scripts/run_1024.sh
 ```
-It is very similar to the original, but with psnr numbers, you can create a completely different image.
+
 
 <br>
 
@@ -103,8 +101,8 @@ CUDA_VISIBLE_DEVICES=0 python run_various.py \
 --prompt "photo of a crack defect image" \
 --ch_prompt "photo of a crack corrosion image" \
 --neg_prompt " " \
---eq 0.5 \
---replace 8.2
+--eq 2.0 \
+--replace 0.8 \
 ```
 
 
@@ -117,25 +115,10 @@ bash scripts/run_various_1024.sh
 
 As a result of changing to various prompts, you can see that it changes in a variety of ways compared to the original.
 
-<br>
-
-## 4️⃣ How do we adjust eq and replace?
-<img src="./fig/top_mid_bottom_comparison_combined.png" alt="Top Mid Bottom Comparison" style="width: 100%;">
-
-<div style="display: flex; justify-content: space-around;">
-  <img src="./fig/psnr_3d_surface.png" alt="PSNR 3D Surface" style="width: 32%;">
-  <img src="./fig/ssim_3d_surface.png" alt="SSIM 3D Surface" style="width: 32%;">
-  <img src="./fig/lpips_3d_surface.png" alt="LPIPS 3D Surface" style="width: 32%;">
-</div>
-
-If you carefully adjust the eq value and replace, you can obtain an image with improved psnr, ssim lpips evaluation indices.!
-The eq value is good when it is 0.0~1.0, especially when it is 0.5.
-The replace value is consistently good when it is between 2.0 and 10.0.
-For a detailed comparison with metrics, refer to the [image comparison with metrics](./fig/image_comparison_with_metrics.png).
 
 <br>
 
-## 5️⃣ Augmentation of various defect data
+## 4️⃣ Various synthetic data generation
 
 Try changing `--prompt` and `--ch_prompt`
 ```bash
@@ -145,8 +128,8 @@ CUDA_VISIBLE_DEVICES=0 python run_dataset_various.py \
 --prompt "photo of a crack defect image" \
 --ch_prompt "photo of a crack corrosion image" \
 --neg_prompt " " \
---eq 0.5 \
---replace 8.2 \
+--eq 2.0 \
+--replace 0.8 \
 --datacheck
 ```
 
@@ -168,9 +151,9 @@ Check results.txt later to check PSNR, SSIM, and LPIPS score.
 
 <br>
 
-## 6️⃣ Comparison of Various Defects
+## 5️⃣ Comparison of Various Defects
 
-eq = 2
+eq = 2.0
 cross = 1.0
 replace = 0.8
 ### Image Size 512

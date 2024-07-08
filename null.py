@@ -62,12 +62,7 @@ class NullInversion:
         alpha_prod_t = self.scheduler.alphas_cumprod[timestep] if timestep >= 0 else self.scheduler.final_alpha_cumprod
         alpha_prod_t_next = self.scheduler.alphas_cumprod[next_timestep]
         beta_prod_t = 1 - alpha_prod_t        
-        beta_prod_t_next = 1 - alpha_prod_t_next
 
-        variance = (beta_prod_t_next / beta_prod_t) * (1 - alpha_prod_t / alpha_prod_t_next)
-
-        eta = 0.1
-        std_dev_t = eta * variance ** (0.5)
         
         next_original_sample = (sample - beta_prod_t ** 0.5 * model_output) / alpha_prod_t ** 0.5        
         next_sample_direction = (1 - alpha_prod_t_next) ** (0.5) * model_output
@@ -125,7 +120,7 @@ class NullInversion:
         return latents
     
     
-# 여기는 손을 봤음 
+
     @torch.no_grad()
     def latent2image(self, latents, return_type='np'):
         latents = 1 / 0.13025 * latents.detach()

@@ -378,13 +378,13 @@ def show_cross_attention(model, prompts, attention_store: AttentionStore, res: i
         image = image.unsqueeze(-1).expand(*image.shape, 3)
         image = image.numpy().astype(np.uint8)
         
-        # # Pillow 이미지로 변환
-        image = Image.fromarray(image)
-        # # 명암 대비를 증가시키기
-        enhancer = ImageEnhance.Contrast(image)
-        image = enhancer.enhance(4.0)  # 대비 인자 조정
         
-        # 256x256 크기로 조정
+        image = Image.fromarray(image)
+        
+        enhancer = ImageEnhance.Contrast(image)
+        image = enhancer.enhance(4.0)  
+        
+        
         resized_image = image.resize((256, 256))
         image_with_text = ptp_utils.text_under_image(np.array(resized_image), decoder(int(tokens[i])))
         images.append(image_with_text)
