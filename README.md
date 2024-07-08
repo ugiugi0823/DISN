@@ -12,9 +12,9 @@ This repository contains:
   <a href="https://colab.research.google.com/drive/1YVs5Oo9VVVzJT2eBFOPJ1U10byhzCQQX?usp=sharing">
     <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open in Colab"/>
   </a>
-* 🪐 A simple PyTorch [implementation](https://github.com/ugiugi0823//DISN/blob/main/run.sh) of DISN
-* ⚡️ Easy Synthetic data generation using our methodology [implementation](https://github.com/ugiugi0823//DISN/blob/main/run_dataset.sh) 
-* 💥 Our LoRA weight [LoRA](https://github.com/ugiugi0823//DISN/blob/main/lora/pytorch_lora_weights.safetensors)
+* 🪐 A simple PyTorch [implementation](https://github.com/ugiugi0823/DISN/blob/main/run.sh) of DISN
+* ⚡️ Easy Synthetic data generation using our methodology [implementation](https://github.com/ugiugi0823/DISN/blob/main/run_dataset.sh) 
+* 💥 Our LoRA weight [LoRA](https://github.com/ugiugi0823/DISN/blob/main/lora/pytorch_lora_weights.safetensors)
 
 
 ## To Do
