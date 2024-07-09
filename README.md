@@ -1,6 +1,6 @@
 ## DISN: Deterministic Synthesis of Defect Images using Null Optimization<br><sub>Official PyTorch Implementation</sub>
 
-![Figure 1](./fig/Figure1.jpg)
+![Figure 1](./fig/Figure1.png)
 This repo contains PyTorch model definitions, pre-trained weights and training/sampling code for our paper exploring Deterministic Synthesis of Defect Images using Null Optimization (DISN) 
 
 
