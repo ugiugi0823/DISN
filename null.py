@@ -160,8 +160,7 @@ class NullInversion:
                 
                 
                 if torch.isnan(latents).any():
-                    print("wldnjsdfjklsfjkld")
-                    # raise ValueError("NaN detected in image2latent!")
+                    raise ValueError("NaN detected in image2latent!")
                     
                 
                 latents = latents * 0.13025

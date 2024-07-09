@@ -51,6 +51,7 @@ def view_images(images, num_rows=1, offset_ratio=0.02):
     current_time = datetime.datetime.now(seoul_tz).strftime("%Y-%m-%dT%H-%M-%S")
     pil_img.save(f"./result/result_{current_time}.png")
     print(f"Image saved as ./result/result_{current_time}.png ") 
+    print(pil_img)
     display(pil_img)
     
     
