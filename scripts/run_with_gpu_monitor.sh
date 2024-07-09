@@ -36,7 +36,8 @@ CUDA_VISIBLE_DEVICES=0 python run_dataset.py \
 --new_dataset_path "./new_dataset" \
 --prompt "photo of a crack defect image" \
 --neg_prompt " " \
---datacheck
+--datacheck \
+--bigger
 echo "Python 스크립트 실행 완료"
 
 # Python 스크립트 종료 후 모니터링 중지
