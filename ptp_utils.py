@@ -105,7 +105,7 @@ def save_individual_images(images,directory="./result"):
 def diff_individual(images, args):
     ch_prompt = args.ch_prompt
     eq = args.eq
-    cross = args.cross
+    cross = 1.0
     replace = args.replace
     
     if not isinstance(images, list):
