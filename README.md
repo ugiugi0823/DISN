@@ -43,7 +43,7 @@ conda env create -f environment.yaml
 conda activate dune
 ```
 
-Computational Costs
+Computational Costs(single image)
 
 | Resolution   | Time     | Peak Memory |
 |--------------|----------|-------------|
