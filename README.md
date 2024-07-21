@@ -30,7 +30,7 @@ This repository contains:
 ## Setup
 
 First, download and set up the repo:
-Code has been tested on Cuda 11.8 but other versions should be fine.
+Code has been tested on CUDA 11.8, Python 3.10.14 but other versions should be fine.
 
 ```bash
 git clone https://github.com/ugiugi0823/DISN.git
@@ -43,7 +43,7 @@ conda env create -f environment.yaml
 conda activate dune
 ```
 
-Computational Costs(single image)
+Computational Costs(single image)[tested, GPU A6000]
 
 | Resolution   | Time     | Peak Memory |
 |--------------|----------|-------------|
