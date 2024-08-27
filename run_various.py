@@ -143,7 +143,7 @@ def main(args):
     images, _ = run_and_display(DISN,neg_prompts, prompts, controller,run_baseline=False, latent=x_t, uncond_embeddings=uncond_embeddings,uncond_embeddings_p=uncond_embeddings_p, steps=50)
     
     
-    ptp_utils.diff_individual([images[0],images[1]], args)
+    
     pil_img = Image.fromarray(images[1])
     file_path = f"./result/{pt}_{neg_prompt}_cross-{cross}_replace-{replace}_eq-{eq}-2.png"
     pil_img.save(file_path)
