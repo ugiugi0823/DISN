@@ -286,8 +286,6 @@ def register_attention_control(model, controller):
                 if input_ndim == 4:
                     hidden_states = hidden_states.transpose(-1, -2).reshape(batch_size, channel, height, width)
 
-                if self.residual_connection:
-                    hidden_states = hidden_states + residual
 
                 # hidden_states = hidden_states / self.rescale_output_factor
                 # to_out(hidden_states)
